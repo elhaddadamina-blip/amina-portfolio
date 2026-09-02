@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-export function useScrollY() {
+export function useScrollY(): number {
   const [y, setY] = useState(0);
   useEffect(() => {
     const fn = () => setY(window.scrollY);
@@ -12,7 +12,7 @@ export function useScrollY() {
   return y;
 }
 
-export function useReveal() {
+export function useReveal(): void {
   useEffect(() => {
     const els = document.querySelectorAll<HTMLElement>(".reveal");
     const io = new IntersectionObserver(
@@ -31,7 +31,7 @@ export function useReveal() {
   }, []);
 }
 
-export function useBarActivation() {
+export function useBarActivation(): void {
   useEffect(() => {
     const bars = document.querySelectorAll<HTMLElement>(".bar-fill");
     const io = new IntersectionObserver(

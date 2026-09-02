@@ -118,10 +118,12 @@ export function CVSection() {
                   </div>
                   <div
                     style={{
-                      fontSize: 10,
-                      color: "rgba(245,245,220,0.38)",
-                      letterSpacing: "0.08em",
+                      fontFamily: "'Montserrat', sans-serif",
+                      fontSize: 12,
+                      fontWeight: 700,
                       textTransform: "uppercase",
+                      letterSpacing: "0.06em",
+                      color: "rgba(245,245,220,0.38)",
                       marginBottom: 4,
                     }}
                   >

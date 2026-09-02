@@ -1,7 +1,9 @@
 export const palette = {
   burgundy: "#800020",
+  burgundyAlt: "#6b162c",
   burgundyDk: "#5c0018",
   ivory: "#F5F5DC",
+  ivoryWarm: "#FAF8F5",
   ivoryDk: "#EAE8C4",
   ivoryMd: "#DDD9B8",
   white: "#FFFFFF",

@@ -83,7 +83,7 @@ export function AnimatedText({
     }
   };
 
-  const MotionTag = motion[el] as any;
+  const MotionTag = motion[el] as React.ElementType;
 
   if (effect === "stagger") {
     const words = text.split(" ");

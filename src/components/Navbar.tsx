@@ -25,6 +25,7 @@ export function Navbar() {
 
   return (
     <nav
+      aria-label="Main navigation"
       className="fixed top-0 left-0 right-0 z-[999] transition-all duration-300"
       style={{
         background: scrolled ? "rgba(245,245,220,0.93)" : "transparent",
@@ -70,6 +71,9 @@ export function Navbar() {
           <button
             className="m-btn md:hidden"
             onClick={() => setOpen(!open)}
+            aria-label="Toggle navigation menu"
+            aria-expanded={open}
+            aria-controls="mobile-menu"
             style={{
               background: "none",
               border: "none",
@@ -87,6 +91,7 @@ export function Navbar() {
       {/* ── MOBILE: dropdown ── */}
       {open && (
         <div
+          id="mobile-menu"
           className="anim-slide-down md:hidden"
           style={{
             background: "rgba(245,245,220,0.97)",

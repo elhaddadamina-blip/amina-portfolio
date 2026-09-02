@@ -61,7 +61,7 @@ export function Hero() {
           transition={{ duration: 2.2, delay: 0.5, ease: "easeOut" }}
         />
 
-        <main className="relative z-10 flex-1 flex flex-col items-center justify-start pt-24 md:pt-28 px-6 md:px-12">
+        <div className="relative z-10 flex-1 flex flex-col items-center justify-start pt-24 md:pt-28 px-6 md:px-12">
 
           {/* ── TOP: badge → name → title ── */}
           <div className="flex flex-col items-center text-center gap-4 w-full max-w-7xl mx-auto">
@@ -115,6 +115,7 @@ export function Hero() {
                 width={600}
                 height={620}
                 priority
+                sizes="(max-width: 768px) 100vw, 600px"
                 className="w-full object-cover object-top filter contrast-105 drop-shadow-2xl"
                 style={{
                   maskImage: "linear-gradient(to bottom, black 70%, transparent 100%)",
@@ -140,7 +141,7 @@ export function Hero() {
             </a>
           </motion.div>
 
-        </main>
+        </div>
       </section>
   );
 }

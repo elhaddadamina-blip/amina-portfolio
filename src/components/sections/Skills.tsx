@@ -12,39 +12,112 @@ import {
 import { skillCategories } from "@/data";
 import { AnimatedText } from "@/components/ui/AnimatedText";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
-import { TechIcon } from "@/components/ui/TechIcon";
+import { TechTile } from "@/components/ui/TechIcon"; // ← TechTile not TechIcon
 
-// Category metadata — Lucide icons only, no emojis
+import type { SkillItem, SkillCategory } from "@/types";
+
+// ── Category metadata ──────────────────────────────────────────────────────
 const categoryMeta: Record<
   string,
-  { Icon: LucideIcon; desc: string; accentFrom: string; accentTo: string }
+  { Icon: LucideIcon; desc: string; gradient: string }
 > = {
-  "Frontend": {
+  Frontend: {
     Icon: Palette,
     desc: "UI, Design Systems & Interaction",
-    accentFrom: "from-sky-500",
-    accentTo: "to-violet-500",
+    gradient: "from-sky-400 to-violet-600",
   },
-  "Backend": {
+  Backend: {
     Icon: Server,
     desc: "APIs, Databases & Business Logic",
-    accentFrom: "from-emerald-500",
-    accentTo: "to-teal-600",
+    gradient: "from-emerald-400 to-teal-600",
   },
   "DevOps & Cloud": {
     Icon: Cloud,
     desc: "Infrastructure, CI/CD & Deployment",
-    accentFrom: "from-orange-400",
-    accentTo: "to-amber-500",
+    gradient: "from-orange-400 to-amber-500",
   },
   "AI & Data": {
     Icon: BrainCircuit,
     desc: "Machine Learning & Analytics",
-    accentFrom: "from-[#6b162c]",
-    accentTo: "to-rose-700",
+    gradient: "from-[#6b162c] to-rose-600",
   },
 };
 
+// ── Skill Card ─────────────────────────────────────────────────────────────
+function SkillCard({
+  item,
+  delay,
+  isInView,
+}: {
+  item: SkillItem;
+  delay: number;
+  isInView: boolean;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      whileHover={{
+        y: -7,
+        scale: 1.05,
+        boxShadow: "0 22px 44px rgba(107,22,44,0.13)",
+      }}
+      transition={{
+        duration: 0.4,
+        delay,
+        type: "spring",
+        stiffness: 300,
+        damping: 20,
+      }}
+      className="
+        group relative flex flex-col items-center
+        bg-white rounded-3xl p-5 pb-6
+        border border-neutral-200/70 shadow-sm
+        cursor-default w-[130px] min-h-[160px]
+        hover:border-[#6b162c]/20
+        transition-colors duration-300
+      "
+    >
+      {/* 
+        TechTile — colored square with white icon inside.
+        Color comes from brandTileColor[item.icon] in TechIcon.tsx.
+        No useColor prop needed or accepted.
+      */}
+      <TechTile
+        icon={item.icon}
+        size={28}
+        tileSize="w-[68px] h-[68px]"
+        radius="rounded-2xl"
+      />
+
+      {/* Label */}
+      <span className="
+        mt-4 text-[13px] font-semibold
+        text-neutral-800 text-center leading-tight
+        group-hover:text-neutral-950
+        transition-colors duration-200
+        px-1
+      ">
+        {item.n}
+      </span>
+
+      {/* Certified badge */}
+      {item.certified && (
+        <div className="
+          absolute -bottom-3.5 left-1/2 -translate-x-1/2
+          bg-neutral-900 text-white
+          text-[9px] font-bold tracking-[0.12em] uppercase
+          px-3 py-1 rounded-full whitespace-nowrap
+          shadow-md border border-neutral-700
+        ">
+          Certified
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
+// ── Main Section ───────────────────────────────────────────────────────────
 export function Skills() {
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
@@ -55,14 +128,18 @@ export function Skills() {
       ref={ref}
       className="relative bg-[#FAF8F5] py-28 md:py-36 overflow-hidden"
     >
-      {/* Ambient background glow */}
-      <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full opacity-20 blur-[130px] bg-[#6b162c]" />
+      {/* Ambient glow */}
+      <div className="
+        pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2
+        w-[700px] h-[500px] rounded-full
+        opacity-20 blur-[130px] bg-[#6b162c]
+      " />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
+      <div className="relative z-10 max-w-6xl mx-auto px-6 md:px-12">
 
-        {/* ── HEADER ── */}
+        {/* ── HEADER ─────────────────────────────────────────────────── */}
         <div className="mb-20 max-w-3xl">
-          <AnimatedSection delay={0.05} className="flex items-center gap-2 mb-5">
+          <AnimatedSection delay={0.05} className="flex items-center gap-2.5 mb-5">
             <div className="w-1 h-4 rounded-full bg-[#6b162c]" />
             <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#6b162c]">
               Technical Skills
@@ -74,103 +151,93 @@ export function Skills() {
             el="h2"
             effect="wipe"
             delay={0.15}
-            className="text-4xl md:text-6xl font-semibold tracking-tight text-neutral-900 leading-tight block"
+            className="
+              text-4xl md:text-6xl font-semibold
+              tracking-tight text-neutral-900
+              leading-tight block
+            "
           />
           <AnimatedText
             text="built across 5 years."
             el="span"
             effect="fade"
             delay={0.3}
-            className="text-3xl md:text-5xl font-serif italic font-normal text-[#6b162c] mt-2 block"
+            className="
+              text-3xl md:text-5xl font-serif italic
+              font-normal text-[#6b162c] mt-2 block
+            "
           />
         </div>
 
-        {/* ── SKILL CATEGORIES ── */}
-        <div className="flex flex-col gap-16">
-          {skillCategories.map((category, catIdx) => {
+        {/* ── CATEGORIES ─────────────────────────────────────────────── */}
+        <div className="flex flex-col gap-20">
+          {(skillCategories as SkillCategory[]).map((category, catIdx) => {
             const meta = categoryMeta[category.cat];
             const CategoryIcon = meta?.Icon ?? Server;
 
             return (
               <div key={category.cat}>
 
-                {/* Category Header Row */}
+                {/* Category header */}
                 <motion.div
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: -24 }}
                   animate={isInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ duration: 0.5, delay: catIdx * 0.1 }}
-                  className="flex items-center gap-5 mb-8"
+                  className="flex items-center gap-5 mb-10"
                 >
-                  {/* Icon Block */}
+                  {/* Gradient category icon tile */}
                   <div
                     className={`
-                      w-11 h-11 rounded-xl flex items-center justify-center shrink-0
-                      bg-gradient-to-br ${meta?.accentFrom ?? "from-neutral-400"} ${meta?.accentTo ?? "to-neutral-600"}
-                      shadow-sm
+                      w-14 h-14 rounded-2xl shrink-0
+                      bg-gradient-to-br
+                      ${meta?.gradient ?? "from-neutral-400 to-neutral-600"}
+                      flex items-center justify-center shadow-lg
                     `}
                   >
-                    <CategoryIcon size={20} className="text-white" strokeWidth={1.75} />
+                    <CategoryIcon
+                      size={26}
+                      className="text-white"
+                      strokeWidth={1.75}
+                    />
                   </div>
 
-                  {/* Text */}
-                  <div className="flex flex-col">
-                    <h3 className="text-lg font-bold text-neutral-900 tracking-tight leading-none">
+                  {/* Title + subtitle */}
+                  <div className="flex flex-col gap-0.5">
+                    <h3 className="text-2xl font-bold text-neutral-900 tracking-tight leading-none">
                       {category.cat}
                     </h3>
                     {meta?.desc && (
-                      <p className="text-xs text-neutral-500 font-medium mt-1">
+                      <p className="text-sm text-neutral-500 font-medium">
                         {meta.desc}
                       </p>
                     )}
                   </div>
 
                   {/* Separator line */}
-                  <div className="flex-1 h-px bg-gradient-to-r from-neutral-200 to-transparent ml-2" />
+                  <div className="flex-1 h-px bg-gradient-to-r from-neutral-300/80 to-transparent ml-4" />
 
                   {/* Skill count badge */}
-                  <span className="shrink-0 text-xs font-semibold text-neutral-400 bg-white border border-neutral-200/80 px-3 py-1 rounded-full">
+                  <span className="
+                    shrink-0 text-xs font-semibold text-neutral-500
+                    bg-white border border-neutral-200/80
+                    px-3 py-1.5 rounded-full
+                  ">
                     {category.items.length} skills
                   </span>
                 </motion.div>
 
-                {/* ── SKILL PILLS ── */}
-                <div className="flex flex-wrap gap-3">
+                {/* Skill cards */}
+                <div className="flex flex-wrap gap-6 pb-4">
                   {category.items.map((item, i) => (
-                    <motion.div
+                    <SkillCard
                       key={item.n}
-                      initial={{ opacity: 0, y: 16 }}
-                      animate={isInView ? { opacity: 1, y: 0 } : {}}
-                      whileHover={{
-                        y: -5,
-                        scale: 1.06,
-                        boxShadow: "0 14px 30px rgba(107, 22, 44, 0.13)",
-                      }}
-                      transition={{
-                        duration: 0.35,
-                        delay: catIdx * 0.07 + i * 0.04,
-                        type: "spring",
-                        stiffness: 320,
-                        damping: 22,
-                      }}
-                      className="group flex items-center gap-2.5 bg-white rounded-2xl px-4 py-3 border border-neutral-200/60 shadow-sm cursor-default hover:border-[#6b162c]/25 transition-colors duration-200"
-                    >
-                      {/* Real tech icon */}
-                      <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-neutral-50 border border-neutral-100/80 group-hover:bg-[#6b162c]/6 group-hover:border-[#6b162c]/15 transition-all duration-300">
-                        <TechIcon
-                          icon={item.icon}
-                          size={17}
-                          useColor={false}
-                          className="text-neutral-500 group-hover:text-[#6b162c] transition-colors duration-300"
-                        />
-                      </div>
-
-                      {/* Label */}
-                      <span className="text-sm font-semibold text-neutral-700 group-hover:text-neutral-900 transition-colors duration-200 whitespace-nowrap">
-                        {item.n}
-                      </span>
-                    </motion.div>
+                      item={item}
+                      delay={catIdx * 0.07 + i * 0.05}
+                      isInView={isInView}
+                    />
                   ))}
                 </div>
+
               </div>
             );
           })}

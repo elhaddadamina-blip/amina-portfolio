@@ -36,20 +36,14 @@ export function Footer() {
               >
                 {siteConfig.initial}
               </div>
-              <span
-                style={{
-                  fontWeight: 700,
-                  fontSize: 16,
-                  color: P.ivory,
-                }}
-              >
+              <span style={{ fontWeight: 700, fontSize: 16, color: P.ivory }}>
                 {siteConfig.name}
               </span>
             </div>
             <p
               style={{
                 fontSize: 13,
-                color: "rgba(245,245,220,0.4)",
+                color: "rgba(245,245,220,0.65)",
                 lineHeight: 1.7,
                 maxWidth: 260,
                 marginBottom: "1.25rem",
@@ -57,28 +51,28 @@ export function Footer() {
             >
               {siteConfig.footerBio}
             </p>
+
+            {/* Social icons — array of components, not objects */}
             <div style={{ display: "flex", gap: 10 }}>
-              {[GithubIcon, LinkedinIcon, Mail].map((Icon, i) => (
+              {([
+                { Icon: GithubIcon, label: "GitHub" }, 
+                { Icon: LinkedinIcon, label: "LinkedIn" }, 
+                { Icon: Mail, label: "Email" }
+              ]).map(({ Icon, label }, i) => (
                 <a
                   key={i}
                   href="#"
-                  className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-white/40 transition-colors duration-200 hover:bg-[#800020] hover:text-[#F5F5DC]"
+                  aria-label={label}
+                  className="w-11 h-11 rounded-lg bg-white/5 flex items-center justify-center text-white/60 transition-colors duration-200 hover:bg-[#800020] hover:text-[#F5F5DC]"
                 >
-                  <Icon size={15} />
+                  <Icon size={18} />
                 </a>
               ))}
             </div>
           </div>
 
           <div>
-            <div
-              style={{
-                fontWeight: 700,
-                fontSize: 13,
-                color: P.ivory,
-                marginBottom: "1rem",
-              }}
-            >
+            <div style={{ fontWeight: 700, fontSize: 13, color: P.ivory, marginBottom: "1rem" }}>
               Navigation
             </div>
             {navLinks.map((l) => (
@@ -93,14 +87,7 @@ export function Footer() {
           </div>
 
           <div>
-            <div
-              style={{
-                fontWeight: 700,
-                fontSize: 13,
-                color: P.ivory,
-                marginBottom: "1rem",
-              }}
-            >
+            <div style={{ fontWeight: 700, fontSize: 13, color: P.ivory, marginBottom: "1rem" }}>
               Featured
             </div>
             {projects.slice(0, 4).map((p) => (
@@ -115,30 +102,19 @@ export function Footer() {
           </div>
 
           <div>
-            <div
-              style={{
-                fontWeight: 700,
-                fontSize: 13,
-                color: P.ivory,
-                marginBottom: "1rem",
-              }}
-            >
+            <div style={{ fontWeight: 700, fontSize: 13, color: P.ivory, marginBottom: "1rem" }}>
               Contact
             </div>
-            {[
-              { Icon: Mail, text: siteConfig.email },
-              { Icon: MapPin, text: siteConfig.location },
-              { Icon: GraduationCap, text: "M2 France — Sept. 2025" },
-            ].map(({ Icon, text }) => (
-              <div key={text} style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 10 }}>
-                <Icon size={13} color="rgba(245,245,220,0.3)" style={{ marginTop: 1, flexShrink: 0 }} />
-                <span
-                  style={{
-                    fontSize: 12,
-                    color: "rgba(245,245,220,0.4)",
-                    lineHeight: 1.4,
-                  }}
-                >
+            {(
+              [
+                { Icon: Mail,          text: siteConfig.email    },
+                { Icon: MapPin,        text: siteConfig.location },
+                { Icon: GraduationCap, text: "M2 France — Sept. 2025" },
+              ] as { Icon: React.ElementType; text: string }[]
+            ).map(({ Icon, text }, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 10 }}>
+                <Icon size={13} color="rgba(245,245,220,0.5)" style={{ marginTop: 1, flexShrink: 0 }} />
+                <span style={{ fontSize: 12, color: "rgba(245,245,220,0.65)", lineHeight: 1.4 }}>
                   {text}
                 </span>
               </div>
@@ -160,7 +136,7 @@ export function Footer() {
           <div
             style={{
               fontSize: 12,
-              color: "rgba(245,245,220,0.28)",
+              color: "rgba(245,245,220,0.55)",
               display: "flex",
               alignItems: "center",
               gap: 5,

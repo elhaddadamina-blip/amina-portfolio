@@ -1,250 +1,272 @@
-import type { Project, Experience } from "@/types";
+import type { 
+  Project, Experience, SkillCategory, Trait, SiteConfig, CvHighlight, Stat, M2Module, NavLink
+} from "@/types";
 
-export const siteConfig = {
-  name: "Amina EL HADDAD",
-  initial: "A",
-  title: "AI & Software Engineer",
-  location: "Tangier, Morocco",
-  email: "amina.elhaddad@ensa.ac.ma",
-  linkedin: "/in/amina-elhaddad",
-  status: "Open to Master's & Internships · 2025",
-  available: true,
-  bio: [
-    "I'm a final-year student in Computer Engineering and Data Science & AI at ENSA Tangier, one of Morocco's leading engineering schools. My 5-year journey has taken me from C++ and relational databases to deploying ML models in production and architecting BigData pipelines.",
-    "This year I'll join a Master's DOSI programme in France, deepening my expertise in software engineering, ERP integration, and enterprise-scale systems.",
-  ],
-  tags: ["Morocco", "Open to Relocation", "French & English"],
-  heroDescription:
-    "Building intelligent systems at the intersection of AI, data engineering, and software architecture.",
-  stats: [
-    { value: "15+", label: "Projects Built" },
-    { value: "25+", label: "Technologies" },
-    { value: "3", label: "Internships" },
-    { value: "5", label: "Years of Study" },
-  ],
-  collaborationText: "Collaborated with",
-  collaborationHighlight: "15+ teams & mentors",
-  collaborationSub: "across research labs and internships.",
-  footerBio:
-    "AI & Software Engineering student from ENSA Tangier. Building intelligent systems, one line at a time.",
-  copyright: "© 2025 Amina EL HADDAD — Made with",
-  copyrightSub: "in Tangier",
-};
-
-export const projects: Project[] = [
-  {
-    id: 1,
-    title: "MedVision AI",
-    cat: "AI/ML",
-    stars: 42,
-    tags: ["Python", "TensorFlow", "Computer Vision", "Flask"],
-    img: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=600&h=380&fit=crop",
-    desc: "Deep learning pipeline for automated medical image analysis. CNN architecture detects anomalies in chest X-rays with 94% accuracy, deployed as a REST API.",
-  },
-  {
-    id: 2,
-    title: "SmartFlow BigData",
-    cat: "Data",
-    stars: 38,
-    tags: ["Spark", "Kafka", "Hadoop", "Elasticsearch"],
-    img: "https://images.unsplash.com/photo-1674027444485-cec3da58eef4?w=600&h=380&fit=crop",
-    desc: "Real-time pipeline processing 1M+ events/sec with Kafka + Spark Streaming and live analytics dashboards.",
-  },
-  {
-    id: 3,
-    title: "ArabSentiment NLP",
-    cat: "AI/ML",
-    stars: 55,
-    tags: ["NLP", "BERT", "PyTorch", "FastAPI"],
-    img: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&h=380&fit=crop",
-    desc: "Multilingual sentiment analyzer for Arabic & French social media. Fine-tuned BERT — 88% F1 on a 50K annotated dataset.",
-  },
-  {
-    id: 4,
-    title: "EduSync ERP",
-    cat: "Web",
-    stars: 29,
-    tags: ["Java", "Spring Boot", "React", "MySQL"],
-    img: "https://images.unsplash.com/photo-1580894908361-967195033215?w=600&h=380&fit=crop",
-    desc: "Full-stack university ERP with Spring Boot microservices and a React dashboard, deployed for 500+ users at ENSA.",
-  },
-  {
-    id: 5,
-    title: "CloudDeploy CLI",
-    cat: "DevOps",
-    stars: 61,
-    tags: ["Python", "Terraform", "Docker", "AWS"],
-    img: "https://images.unsplash.com/photo-1544717302-de2939b7ef71?w=600&h=380&fit=crop",
-    desc: "Open-source CLI for multi-cloud deployments using Terraform + Ansible orchestration with drift detection and rollback.",
-  },
-  {
-    id: 6,
-    title: "BioTrack Mobile",
-    cat: "Mobile",
-    stars: 34,
-    tags: ["React Native", "TF Lite", "Node.js", "MongoDB"],
-    img: "https://images.unsplash.com/photo-1573165265437-f5e267bb3db6?w=600&h=380&fit=crop",
-    desc: "Cross-platform health tracker with AI-powered insights. TensorFlow Lite runs inference on-device — no server round-trips.",
-  },
-];
-
-export const experience: Experience[] = [
-  {
-    title: "Data Science Intern",
-    co: "OCP Group",
-    loc: "Casablanca",
-    period: "Jul – Sep 2024",
-    icon: "BarChart2",
-    tags: ["Python", "Apache Spark", "Power BI", "Azure ML"],
-    desc: "Built predictive models for chemical-process optimisation. Reduced material waste by 12%. Power BI dashboards used daily by 30+ process engineers.",
-  },
-  {
-    title: "Full-Stack Developer Intern",
-    co: "StartTech Digital",
-    loc: "Tangier",
-    period: "Jun – Aug 2023",
-    icon: "Code2",
-    tags: ["Spring Boot", "React", "MySQL", "Docker", "Jenkins"],
-    desc: "Built REST APIs and React dashboards for an e-commerce platform. Improved page load time by 40% via code-splitting and Redis caching. Set up Jenkins CI/CD pipeline.",
-  },
-  {
-    title: "Research Assistant — NLP Lab",
-    co: "ENSA Tangier",
-    loc: "Tangier",
-    period: "Jan – Jun 2023",
-    icon: "Brain",
-    tags: ["Python", "BERT", "NLTK", "Hugging Face", "Jupyter"],
-    desc: "Contributed to Darija (Moroccan Arabic) NLP research. Co-built a dataset of 50K annotated posts. Implemented BERT-based sentiment classifier.",
-  },
-];
-
-export const ensaCurriculum: Record<string, string[]> = {
-  "Year 1 — Computer Engineering": [
-    "Mathematics",
-    "Networks & Systems I",
-    "Computer Electronics & Architecture",
-    "Relational Database Design",
-    "C++ & Data Structures",
-    "Management I",
-    "Languages & Communication I",
-  ],
-  "Year 2 — Computer Engineering": [
-    "Networks & Systems II",
-    "Web Dev (PHP & JS)",
-    "Advanced OOP",
-    "SQL / PL-SQL",
-    "Digital Skills",
-    "Operations Research & Graph Theory",
-    "Languages & Communication II",
-  ],
-  "Year 3 — Computer Engineering": [
-    "JavaFX & Design Patterns",
-    "Advanced Database",
-    "Advanced DevOps & PHP",
-    "OO Modeling & Agile PM",
-    "Windows Admin, Virtualisation & Containers",
-    "Professional Communication",
-    "Management II",
-  ],
-  "Year 4 — Data Science & AI (M1)": [
-    "Business Intelligence & NoSQL",
-    "Cross-Platform Development",
-    "ERP & Cloud Computing",
-    "Image Processing & Vision Systems",
-    "Web Dev in Java & Python",
-    "AI Ethics & Applications",
-    "Languages & Communication III",
-  ],
-  "Year 5 — Data Science & AI (Graduation)": [
-    "Advanced Artificial Intelligence",
-    "Spring Frameworks & Microservices",
-    "Machine Learning & NLP",
-    "BigData Architecture & DataOps",
-    "Professional Law",
-    "Management III",
-    "Projects, Internships & Professional Networking",
-  ],
-};
-
-export const m2Modules: Record<string, { name: string; ects: number }[]> = {
-  "Semester 9": [
-    { name: "English & Communication", ects: 4 },
-    { name: "Continuous Integration Platform", ects: 3 },
-    { name: "ERP Integration & Configuration", ects: 4 },
-    { name: "Information Systems Engineering", ects: 5 },
-    { name: "Frontend Web Development", ects: 5 },
-    { name: "J2EE Development & Frameworks", ects: 5 },
-    { name: "Software Engineering", ects: 4 },
-  ],
-  "Semester 10": [
-    { name: "Web Services & Mobility", ects: 4 },
-    { name: "Application Architecture", ects: 3 },
-    { name: "Agile Project", ects: 8 },
-    { name: "6-Month Industry Internship", ects: 15 },
-  ],
-};
-
+// ─── Skills ────────────────────────────────────────────────────────────────
 export const skillCategories = [
   {
     cat: "Frontend",
     items: [
-      { n: "React",      icon: "SiReact" },
-      { n: "Next.js",    icon: "SiNextdotjs" },
-      { n: "TypeScript", icon: "SiTypescript" },
-      { n: "Tailwind",   icon: "SiTailwindcss" },
-      { n: "Figma",      icon: "SiFigma" },
-      { n: "Framer",     icon: "SiFramer" },
+      { n: "React",       icon: "SiReact",       certified: false },
+      { n: "Next.js",     icon: "SiNextdotjs",   certified: false },
+      { n: "TypeScript",  icon: "SiTypescript",  certified: false },
+      { n: "Tailwind",    icon: "SiTailwindcss", certified: false },
+      { n: "JavaScript",  icon: "SiJavascript",  certified: false },
+      { n: "Angular",     icon: "SiAngular",     certified: false },
+      { n: "Figma",       icon: "SiFigma",       certified: false },
+      { n: "Framer",      icon: "SiFramer",      certified: false },
+      { n: "CSS",         icon: "SiCss",         certified: false },
     ],
   },
   {
     cat: "Backend",
     items: [
-      { n: "Node.js",    icon: "SiNodedotjs" },
-      { n: "Python",     icon: "SiPython" },
-      { n: "FastAPI",    icon: "SiFastapi" },
-      { n: "PostgreSQL", icon: "SiPostgresql" },
-      { n: "MongoDB",    icon: "SiMongodb" },
-      { n: "Prisma",     icon: "SiPrisma" },
+      { n: "Java",        icon: "FaJava",        certified: false },
+      { n: "Spring Boot", icon: "SiSpring",      certified: false },
+      { n: "Python",      icon: "SiPython",      certified: false },
+      { n: "FastAPI",     icon: "SiFastapi",     certified: false },
+      { n: "Node.js",     icon: "SiNodedotjs",   certified: false },
+      { n: "NestJS",      icon: "SiNestjs",      certified: false },
+      { n: "PHP",         icon: "SiPhp",         certified: false },
+      { n: "PostgreSQL",  icon: "SiPostgresql",  certified: false },
+      { n: "MySQL",       icon: "SiMysql",       certified: false },
+      { n: "MongoDB",     icon: "SiMongodb",     certified: false },
+      { n: "Redis",       icon: "SiRedis",       certified: false },
     ],
   },
   {
     cat: "DevOps & Cloud",
     items: [
-      { n: "Docker",     icon: "SiDocker" },
-      { n: "AWS",        icon: "SiAmazonaws" },
-      { n: "GitHub",     icon: "SiGithub" },
-      { n: "Vercel",     icon: "SiVercel" },
-      { n: "Linux",      icon: "SiLinux" },
-      { n: "Supabase",   icon: "SiSupabase" },
+      { n: "Docker",      icon: "SiDocker",            certified: false },
+      { n: "Kubernetes",  icon: "SiKubernetes",        certified: false },
+      { n: "AWS",         icon: "SiAmazonwebservices", certified: false },
+      { n: "Azure",       icon: "SiMicrosoftazure",    certified: true  },
+      { n: "Jenkins",     icon: "SiJenkins",           certified: false },
+      { n: "GitHub",      icon: "SiGithub",            certified: false },
+      { n: "Vercel",      icon: "SiVercel",            certified: false },
+      { n: "Linux",       icon: "SiLinux",             certified: false },
+      { n: "Terraform",   icon: "SiTerraform",         certified: false },
+      { n: "Ansible",     icon: "SiAnsible",           certified: false },
     ],
   },
   {
     cat: "AI & Data",
     items: [
-      { n: "TensorFlow", icon: "SiTensorflow" },
-      { n: "PyTorch",    icon: "SiPytorch" },
-      { n: "OpenAI",     icon: "SiOpenai" },
-      { n: "Pandas",     icon: "SiPandas" },
-      { n: "Jupyter",    icon: "SiJupyter" },
-      { n: "HuggingFace",icon: "SiHuggingface" },
+      { n: "TensorFlow",    icon: "SiTensorflow",       certified: false },
+      { n: "PyTorch",       icon: "SiPytorch",          certified: false },
+      { n: "Hugging Face",  icon: "SiHuggingface",      certified: false },
+      { n: "OpenAI",        icon: "SiOpenai",           certified: false },
+      { n: "Pandas",        icon: "SiPandas",           certified: false },
+      { n: "Jupyter",       icon: "SiJupyter",          certified: false },
+      { n: "Spark",         icon: "SiApachespark",      certified: false },
+      { n: "Kafka",         icon: "SiApachekafka",      certified: false },
+      { n: "Elasticsearch", icon: "SiElasticsearch",    certified: false },
+      { n: "Power BI",      icon: "SiMicrosoftpowerbi", certified: false },
     ],
   },
-];
+] satisfies SkillCategory[];
 
-export const projectCategories = ["All", "AI/ML", "Data", "Web", "DevOps", "Mobile"];
-
-export const navLinks = ["Experience", "Projects", "Skills", "About", "Contact"];
-
+// ─── CV Highlights ──────────────────────────────────────────────────────────
 export const cvHighlights = [
-  { icon: "GraduationCap", label: "Education", val: "Bac+5 Engineering", sub: "ENSA Tangier + M2 France" },
-  { icon: "Code2", label: "Specialty", val: "AI & Software Eng.", sub: "Full-stack + BigData" },
-  { icon: "Terminal", label: "Top Languages", val: "Python · Java · JS", sub: "C++ · PHP · SQL" },
-  { icon: "Award", label: "Certifications", val: "Azure · Scrum", sub: "In progress 2025" },
-];
+  { icon: "GraduationCap", label: "Education",       val: "Engineering Degree", sub: "Computer Science"    },
+  { icon: "Code2",         label: "Experience",      val: "5+ Years",           sub: "Full-Stack & Cloud"  },
+  { icon: "Terminal",      label: "Projects",        val: "20+ Built",          sub: "Web · Mobile · AI"   },
+  { icon: "Award",         label: "Certifications",  val: "Azure Certified",    sub: "AZ-900 · AZ-204"     },
+] satisfies CvHighlight[];
 
+// ─── Experience ─────────────────────────────────────────────────────────────
+export const experience = [
+  {
+    icon:   "BarChart2",
+    title:  "Data & BI Developer Intern",
+    co:     "Entreprise A",
+    period: "Jun 2024 – Aug 2024",
+    loc:    "Casablanca, MA",
+    desc:   "Built interactive Power BI dashboards and automated reporting pipelines, reducing manual reporting time by 60%.",
+    tags:   ["Power BI", "SQL", "Python", "ETL"],
+  },
+  {
+    icon:   "Code2",
+    title:  "Full-Stack Developer Intern",
+    co:     "Entreprise B",
+    period: "Jun 2023 – Aug 2023",
+    loc:    "Rabat, MA",
+    desc:   "Developed RESTful APIs with Spring Boot and built responsive React interfaces for an internal HR management platform.",
+    tags:   ["React", "Spring Boot", "PostgreSQL", "Docker"],
+  },
+  {
+    icon:   "Brain",
+    title:  "AI Research Intern",
+    co:     "Entreprise C",
+    period: "Jun 2022 – Aug 2022",
+    loc:    "Tanger, MA",
+    desc:   "Trained NLP models for Arabic text classification using HuggingFace Transformers, achieving 87% accuracy on the test set.",
+    tags:   ["Python", "HuggingFace", "PyTorch", "NLP"],
+  },
+] satisfies Experience[];
+
+// ─── Site Config ────────────────────────────────────────────────────────────
+export const siteConfig = {
+  initial:      "A",
+  name:         "Amina EL HADDAD",
+  email:        "elhaddadamina410@gmail.com",
+  copyright:    "© 2026 Amina EL HADDAD — Made with",
+  copyrightSub: "in Morocco & France.",
+  location:     "Morocco & France",
+  footerBio:    "Software, Data engineer & AI building modern intelligent systems.",
+  bio: [
+    "I'm a 5th-year Computer Engineering student at ENSA Tangier, specialising in Data Science & AI.",
+    "Starting September 2025, I'll be pursuing a Master's DOSI programme in France to deepen my expertise in modern information systems.",
+    "I build full-stack applications, design cloud infrastructure, and experiment with machine learning models — always with a focus on clean code and real-world impact.",
+  ],
+  tags: [
+    "🇲🇦 Tanger → 🇫🇷 France",
+    "Open to opportunities",
+    "Full-Stack · Data · AI · Cloud",
+  ],
+  linkedin:     "Amina EL HADDAD",
+  github:       "aminael24",
+  linkedinUrl:  "https://www.linkedin.com/in/amina-el-haddad-476210341",
+  githubUrl:    "https://github.com/aminael24",
+} satisfies SiteConfig;
+
+// ─── About Traits ───────────────────────────────────────────────────────────
 export const traits = [
-  { icon: "Brain", label: "AI-Driven", desc: "Passionate about ML, NLP, and Computer Vision" },
-  { icon: "Code2", label: "Full-Stack", desc: "From REST APIs to React UIs and mobile apps" },
-  { icon: "BarChart2", label: "Data-Centric", desc: "BigData pipelines, BI dashboards, statistics" },
-  { icon: "BookOpen", label: "Lifelong Learner", desc: "MSc bound — always exploring new technologies" },
-];
+  { icon: "Code2",    label: "Full-Stack Dev",      desc: "React, Next.js, Spring Boot, Node.js — end-to-end product delivery."           },
+  { icon: "Brain",    label: "AI & ML",             desc: "PyTorch, HuggingFace, scikit-learn — from research to production models."       },
+  { icon: "BarChart2",label: "Data Engineering",    desc: "Spark, Kafka, Elasticsearch, Power BI — pipelines and analytics at scale."      },
+  { icon: "BookOpen", label: "Continuous Learner",  desc: "Azure certified, always exploring new frameworks and research papers."           },
+] satisfies Trait[];
+
+// ─── Nav Links ──────────────────────────────────────────────────────────────
+export const navLinks = [
+  "About",
+  "Skills",
+  "Experience",
+  "Projects",
+  "Education",
+  "CV",
+  "Contact",
+] satisfies NavLink[];
+
+// ─── Projects ───────────────────────────────────────────────────────────────
+export const projectCategories = ["All", "Web App", "AI / ML", "DevOps", "Data"] satisfies string[];
+
+export const projects = [
+  {
+    id:    "1",
+    title: "AI Portfolio Assistant",
+    cat:   "AI / ML",
+    img:   "/projects/ai-assistant.png",
+    stars: "4.9",
+    desc:  "Conversational AI assistant trained on personal portfolio data, built with LangChain, FastAPI, and a Next.js chat UI.",
+    tags:  ["Next.js", "FastAPI", "LangChain", "OpenAI"],
+  },
+  {
+    id:    "2",
+    title: "HR Management Platform",
+    cat:   "Web App",
+    img:   "/projects/hr-platform.png",
+    stars: "4.8",
+    desc:  "Full-stack HR platform with payroll, leave management, and analytics dashboards, deployed on Azure with Docker.",
+    tags:  ["React", "Spring Boot", "PostgreSQL", "Docker", "Azure"],
+  },
+  {
+    id:    "3",
+    title: "Real-Time Data Pipeline",
+    cat:   "Data",
+    img:   "/projects/data-pipeline.png",
+    stars: "4.7",
+    desc:  "Kafka + Spark streaming pipeline ingesting IoT sensor data, stored in Elasticsearch and visualised in Kibana.",
+    tags:  ["Kafka", "Spark", "Elasticsearch", "Python"],
+  },
+  {
+    id:    "4",
+    title: "Arabic NLP Classifier",
+    cat:   "AI / ML",
+    img:   "/projects/nlp.png",
+    stars: "4.8",
+    desc:  "Fine-tuned AraBERT model for multi-class Arabic text classification, achieving 87% accuracy on a 50k-sample dataset.",
+    tags:  ["PyTorch", "HuggingFace", "Python", "NLP"],
+  },
+  {
+    id:    "5",
+    title: "K8s Monitoring Stack",
+    cat:   "DevOps",
+    img:   "/projects/k8s.png",
+    stars: "4.6",
+    desc:  "Production-grade Kubernetes cluster with Prometheus, Grafana, and automated alerting via PagerDuty integration.",
+    tags:  ["Kubernetes", "Terraform", "Prometheus", "Grafana"],
+  },
+  {
+    id:    "6",
+    title: "E-Commerce Analytics",
+    cat:   "Data",
+    img:   "/projects/analytics.png",
+    stars: "4.7",
+    desc:  "Power BI dashboards connected to a star-schema data warehouse, delivering real-time sales insights to stakeholders.",
+    tags:  ["Power BI", "SQL Server", "Python", "ETL"],
+  },
+] satisfies Project[];
+
+// ─── Education ──────────────────────────────────────────────────────────────
+export const ensaCurriculum: Record<string, string[]> = {
+  "Year 1 — Fundamentals": [
+    "Mathematics & Analysis",
+    "Algorithms & Data Structures",
+    "Object-Oriented Programming (Java)",
+    "Computer Architecture",
+    "Technical English",
+  ],
+  "Year 2 — Core Engineering": [
+    "Databases (SQL & NoSQL)",
+    "Operating Systems & Linux",
+    "Networks & Protocols",
+    "Web Development (HTML, CSS, JS)",
+    "Statistics & Probability",
+  ],
+  "Year 3 — Software Engineering": [
+    "Design Patterns & UML",
+    "Spring Framework & REST APIs",
+    "DevOps & CI/CD",
+    "Software Testing & Quality",
+    "Project Management (Agile/Scrum)",
+  ],
+  "Year 4 — Specialisation": [
+    "Machine Learning & Deep Learning",
+    "Big Data (Hadoop, Spark)",
+    "Cloud Computing (Azure, AWS)",
+    "Data Warehousing & BI",
+    "Natural Language Processing",
+  ],
+  "Year 5 — Advanced & Internship": [
+    "MLOps & Model Deployment",
+    "Microservices Architecture",
+    "Kubernetes & Container Orchestration",
+    "Research Methodology",
+    "6-Month End-of-Studies Internship",
+  ],
+};
+
+export const m2Modules: Record<string, M2Module[]> = {
+  "Semester 9": [
+    { name: "Advanced Software Architecture",      ects: 6 },
+    { name: "Cloud-Native Development",            ects: 6 },
+    { name: "AI & Decision Systems",               ects: 6 },
+    { name: "Enterprise Information Systems",      ects: 6 },
+    { name: "Agile Project & Team Management",     ects: 6 },
+  ],
+  "Semester 10": [
+    { name: "Distributed Systems & Microservices", ects: 6 },
+    { name: "Security & Compliance",               ects: 6 },
+    { name: "Data Science in Practice",            ects: 6 },
+    { name: "Innovation & Entrepreneurship",       ects: 6 },
+    { name: "6-Month Professional Internship",     ects: 6 },
+  ],
+};
+
+export const stats = [
+  { val: "5+",  label: "Years coding"     },
+  { val: "20+", label: "Projects shipped" },
+  { val: "3",   label: "Internships"      },
+] satisfies Stat[];

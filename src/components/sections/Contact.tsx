@@ -29,7 +29,6 @@ export function Contact() {
     fontFamily: "'Montserrat', sans-serif",
     fontSize: 14,
     color: P.dark,
-    outline: "none",
     transition: "border-color 0.2s, box-shadow 0.2s",
     boxShadow: focused === field ? `0 0 0 3px rgba(128,0,32,0.07)` : "none",
   });
@@ -37,10 +36,14 @@ export function Contact() {
   const contactItems = [
     { Icon: Mail, label: "Email", val: siteConfig.email, href: `mailto:${siteConfig.email}` },
     { Icon: MapPin, label: "Location", val: siteConfig.location, href: "#" },
-    { Icon: LinkedinIcon, label: "LinkedIn", val: siteConfig.linkedin, href: "#" },
+    { Icon: LinkedinIcon, label: "LinkedIn", val: siteConfig.linkedin, href: siteConfig.linkedinUrl },
   ];
 
-  const socialItems = [GithubIcon, LinkedinIcon, Mail];
+  const socialItems = [
+    { Icon: GithubIcon, href: siteConfig.githubUrl, label: "GitHub" },
+    { Icon: LinkedinIcon, href: siteConfig.linkedinUrl, label: "LinkedIn" },
+    { Icon: Mail, href: `mailto:${siteConfig.email}`, label: "Email" },
+  ];
 
   return (
     <section id="contact" style={{ background: P.ivory, padding: "6rem 0" }}>
@@ -87,7 +90,9 @@ export function Contact() {
                 <AnimatedSection key={label} delay={0.5 + i * 0.1}>
                   <a
                     href={href}
-                  style={{
+                    target={href.startsWith("http") ? "_blank" : undefined}
+                    rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    style={{
                     display: "flex",
                     alignItems: "center",
                     gap: 14,
@@ -150,10 +155,13 @@ export function Contact() {
               ))}
             </div>
             <div style={{ display: "flex", gap: 10 }}>
-              {socialItems.map((Icon, i) => (
-                <AnimatedSection key={i} delay={0.8 + i * 0.1}>
+              {socialItems.map(({ Icon, href, label }, i) => (
+                <AnimatedSection key={label} delay={0.8 + i * 0.1}>
                   <a
-                    href="#"
+                    href={href}
+                    target={href.startsWith("http") ? "_blank" : undefined}
+                    rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    aria-label={label}
                   style={{
                     width: 44,
                     height: 44,
@@ -273,6 +281,7 @@ export function Contact() {
                   {(["name", "email"] as const).map((f) => (
                     <div key={f}>
                       <label
+                        htmlFor={f}
                         style={{
                           fontFamily: "'Montserrat', sans-serif",
                           fontSize: 12,
@@ -285,6 +294,7 @@ export function Contact() {
                         {f === "name" ? "Name" : "Email"}
                       </label>
                       <input
+                        id={f}
                         required
                         type={f === "email" ? "email" : "text"}
                         value={form[f]}
@@ -299,6 +309,7 @@ export function Contact() {
                 </div>
                 <div style={{ marginBottom: 14 }}>
                   <label
+                    htmlFor="subject"
                     style={{
                       fontFamily: "'Montserrat', sans-serif",
                       fontSize: 12,
@@ -311,6 +322,7 @@ export function Contact() {
                     Subject
                   </label>
                   <input
+                    id="subject"
                     value={form.subject}
                     onChange={(e) => setForm((v) => ({ ...v, subject: e.target.value }))}
                     onFocus={() => setFocused("subject")}
@@ -321,6 +333,7 @@ export function Contact() {
                 </div>
                 <div style={{ marginBottom: "1.5rem" }}>
                   <label
+                    htmlFor="message"
                     style={{
                       fontFamily: "'Montserrat', sans-serif",
                       fontSize: 12,
@@ -333,6 +346,7 @@ export function Contact() {
                     Message
                   </label>
                   <textarea
+                    id="message"
                     required
                     rows={5}
                     value={form.message}

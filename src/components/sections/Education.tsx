@@ -108,7 +108,7 @@ export function Education() {
                       style={{
                         fontFamily: "'Montserrat', sans-serif",
                         fontSize: 12,
-                        color: "rgba(245,245,220,0.5)",
+                        color: "rgba(245,245,220,0.7)",
                       }}
                     >
                       ENSA Tangier 🇲🇦
@@ -272,9 +272,9 @@ export function Education() {
                   <div
                     style={{
                       fontFamily: "'Montserrat', sans-serif",
-                      fontSize: 10,
+                      fontSize: 12,
                       letterSpacing: "0.1em",
-                      color: "rgba(255,255,255,0.4)",
+                      color: "rgba(255,255,255,0.7)",
                       marginBottom: 4,
                     }}
                   >
@@ -296,19 +296,19 @@ export function Education() {
                     style={{
                       fontFamily: "'Montserrat', sans-serif",
                       fontSize: 13,
-                      color: "rgba(255,255,255,0.55)",
+                      color: "rgba(255,255,255,0.7)",
                       marginTop: 4,
                     }}
                   >
                     DOSI — Développement Logiciel des SI
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 8 }}>
-                    <MapPin size={12} color="rgba(255,255,255,0.35)" />
+                    <MapPin size={12} color="rgba(255,255,255,0.5)" />
                     <span
                       style={{
                         fontFamily: "'Montserrat', sans-serif",
                         fontSize: 12,
-                        color: "rgba(255,255,255,0.4)",
+                        color: "rgba(255,255,255,0.5)",
                       }}
                     >
                       France 🇫🇷 — Autumn 2025
@@ -381,12 +381,12 @@ export function Education() {
                       <div
                         style={{
                           fontFamily: "'Montserrat', sans-serif",
-                          fontSize: 11,
-                          fontWeight: 600,
-                          color: P.burgundy,
-                          letterSpacing: "0.08em",
-                          marginBottom: 8,
+                          fontSize: 12,
+                          fontWeight: 700,
                           textTransform: "uppercase",
+                          letterSpacing: "0.05em",
+                          color: P.burgundy,
+                          marginBottom: 8,
                         }}
                       >
                         {sem}

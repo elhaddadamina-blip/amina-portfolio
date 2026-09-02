@@ -3,6 +3,7 @@ import { ProgressBar } from "@/components/ProgressBar";
 import { Hero } from "@/components/sections/Hero";
 import { Skills } from "@/components/sections/Skills";
 import { About } from "@/components/sections/About";
+import { SocialSidebar } from "@/components/ui/SocialSidebar";
 
 import { Projects } from "@/components/sections/Projects";
 import { Experience } from "@/components/sections/Experience";
@@ -14,9 +15,10 @@ import { palette as P } from "@/lib/palette";
 
 export default function Home() {
   return (
-    <div style={{ background: P.ivory }}>
+    <main id="main-content" className="bg-[#F5F5DC]">
       <ScrollObserver />
       <ProgressBar />
+      <SocialSidebar />
       <Navbar />
       <Hero />
       <Experience />
@@ -27,6 +29,6 @@ export default function Home() {
       <CVSection />
       <Contact />
       <Footer />
-    </div>
+    </main>
   );
 }

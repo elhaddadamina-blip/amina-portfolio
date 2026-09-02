@@ -52,16 +52,29 @@ export const metadata: Metadata = {
     "ENSA Tangier",
   ],
   authors: [{ name: "Amina El Haddad" }],
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "Amina El Haddad — AI & Software Engineer",
     description: "Building intelligent systems at the intersection of AI, data engineering, and software architecture.",
     type: "website",
+    url: "/",
     siteName: "Amina El Haddad Portfolio",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Amina EL HADDAD — AI & Software Engineer Portfolio",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Amina El Haddad — AI & Software Engineer",
     description: "Building intelligent systems at the intersection of AI, data engineering, and software architecture.",
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
@@ -79,7 +92,15 @@ export default function RootLayout({
       lang="en"
       className={`${montserrat.variable} ${plusJakartaSans.variable} ${playfairDisplay.variable} ${jetbrainsMono.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:bg-[#6b162c] focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:text-sm focus:font-semibold"
+        >
+          Skip to main content
+        </a>
+        {children}
+      </body>
     </html>
   );
 }

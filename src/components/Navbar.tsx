@@ -57,13 +57,24 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* ── RIGHT: Resume button ── */}
-          <div className="hidden md:flex items-center shrink-0">
+          {/* ── RIGHT: CV + Hire Me ── */}
+          <div className="hidden md:flex items-center gap-2.5 shrink-0">
+            {/* CV button */}
             <a
               href="#cv"
-              className="flex items-center gap-1.5 bg-[#800020] text-[#F5F5DC] px-5 py-2 rounded-lg font-semibold text-xs transition-all duration-200 hover:bg-[#600018] hover:-translate-y-0.5"
+              className="flex items-center gap-1.5 border border-[#800020] text-[#800020] px-4 py-2 rounded-full font-semibold text-xs transition-all duration-200 hover:bg-[#800020] hover:text-[#F5F5DC] hover:-translate-y-0.5"
             >
-              <Download size={13} /> Resume
+              <Download size={12} /> CV
+            </a>
+
+            {/* Hire Me — animated glow button */}
+            <a
+              href="#contact"
+              className="relative flex items-center justify-center px-5 py-2 rounded-full font-bold text-white text-xs overflow-hidden transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_14px_rgba(128,0,32,0.35)] hover:shadow-[0_0_22px_rgba(128,0,32,0.55)]"
+            >
+              <span className="absolute inset-0 bg-gradient-to-r from-[#800020] via-[#d12f57] to-[#800020] anim-gradient-flow" />
+              <span className="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-20deg] anim-shine-sweep" />
+              <span className="relative z-10 tracking-widest uppercase">Hire Me</span>
             </a>
           </div>
 
@@ -118,17 +129,25 @@ export function Navbar() {
               <ChevronRight size={15} color={P.muted} />
             </a>
           ))}
-          <a
-            href="#cv"
-            onClick={() => setOpen(false)}
-            className="flex items-center gap-2 mt-4 no-underline rounded-lg px-5 py-3 font-semibold text-sm"
-            style={{
-              background: P.burgundy,
-              color: P.ivory,
-            }}
-          >
-            <Download size={14} /> Download Resume
-          </a>
+          <div className="flex gap-3 mt-4">
+            <a
+              href="#cv"
+              onClick={() => setOpen(false)}
+              className="flex-1 flex items-center justify-center gap-2 no-underline rounded-full px-5 py-3 font-semibold text-sm border"
+              style={{ borderColor: P.burgundy, color: P.burgundy }}
+            >
+              <Download size={14} /> CV
+            </a>
+            <a
+              href="#contact"
+              onClick={() => setOpen(false)}
+              className="flex-1 relative flex items-center justify-center rounded-full font-bold text-white text-sm overflow-hidden shadow-[0_0_14px_rgba(128,0,32,0.35)]"
+            >
+              <span className="absolute inset-0 bg-gradient-to-r from-[#800020] via-[#d12f57] to-[#800020] anim-gradient-flow" />
+              <span className="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-20deg] anim-shine-sweep" />
+              <span className="relative z-10 tracking-widest uppercase py-3">Hire Me</span>
+            </a>
+          </div>
         </div>
       )}
     </nav>

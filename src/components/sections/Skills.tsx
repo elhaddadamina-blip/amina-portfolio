@@ -2,13 +2,6 @@
 
 import { useRef } from "react";
 import { useInView, motion } from "framer-motion";
-import {
-  Palette,
-  Server,
-  Cloud,
-  BrainCircuit,
-  type LucideIcon,
-} from "lucide-react";
 import { skillCategories } from "@/data";
 import { AnimatedText } from "@/components/ui/AnimatedText";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
@@ -16,30 +9,21 @@ import { TechTile } from "@/components/ui/TechIcon"; // ← TechTile not TechIco
 
 import type { SkillItem, SkillCategory } from "@/types";
 
-// ── Category metadata ──────────────────────────────────────────────────────
 const categoryMeta: Record<
   string,
-  { Icon: LucideIcon; desc: string; gradient: string }
+  { desc: string }
 > = {
   Frontend: {
-    Icon: Palette,
     desc: "UI, Design Systems & Interaction",
-    gradient: "from-sky-400 to-violet-600",
   },
   Backend: {
-    Icon: Server,
     desc: "APIs, Databases & Business Logic",
-    gradient: "from-emerald-400 to-teal-600",
   },
   "DevOps & Cloud": {
-    Icon: Cloud,
     desc: "Infrastructure, CI/CD & Deployment",
-    gradient: "from-orange-400 to-amber-500",
   },
   "AI & Data": {
-    Icon: BrainCircuit,
     desc: "Machine Learning & Analytics",
-    gradient: "from-[#6b162c] to-rose-600",
   },
 };
 
@@ -71,11 +55,11 @@ function SkillCard({
       }}
       className="
         group relative flex flex-col items-center
-        bg-white rounded-3xl p-5 pb-6
-        border border-neutral-200/70 shadow-sm
+        bg-white/40 backdrop-blur-md rounded-3xl p-5 pb-6
+        border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.04)]
         cursor-default w-[130px] min-h-[160px]
-        hover:border-[#6b162c]/20
-        transition-colors duration-300
+        hover:border-white/60 hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)]
+        transition-all duration-300
       "
     >
       {/* 
@@ -173,7 +157,6 @@ export function Skills() {
         <div className="flex flex-col gap-20">
           {(skillCategories as SkillCategory[]).map((category, catIdx) => {
             const meta = categoryMeta[category.cat];
-            const CategoryIcon = meta?.Icon ?? Server;
 
             return (
               <div key={category.cat}>
@@ -183,47 +166,16 @@ export function Skills() {
                   initial={{ opacity: 0, x: -24 }}
                   animate={isInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ duration: 0.5, delay: catIdx * 0.1 }}
-                  className="flex items-center gap-5 mb-10"
+                  className="mb-8 pb-3 border-b border-neutral-200/80"
                 >
-                  {/* Gradient category icon tile */}
-                  <div
-                    className={`
-                      w-14 h-14 rounded-2xl shrink-0
-                      bg-gradient-to-br
-                      ${meta?.gradient ?? "from-neutral-400 to-neutral-600"}
-                      flex items-center justify-center shadow-lg
-                    `}
-                  >
-                    <CategoryIcon
-                      size={26}
-                      className="text-white"
-                      strokeWidth={1.75}
-                    />
-                  </div>
-
-                  {/* Title + subtitle */}
-                  <div className="flex flex-col gap-0.5">
-                    <h3 className="text-2xl font-bold text-neutral-900 tracking-tight leading-none">
-                      {category.cat}
-                    </h3>
+                  <h3 className="text-2xl font-bold text-neutral-900 tracking-tight">
+                    {category.cat}
                     {meta?.desc && (
-                      <p className="text-sm text-neutral-500 font-medium">
-                        {meta.desc}
-                      </p>
+                      <span className="text-neutral-500 font-normal ml-2">
+                        : {meta.desc}
+                      </span>
                     )}
-                  </div>
-
-                  {/* Separator line */}
-                  <div className="flex-1 h-px bg-gradient-to-r from-neutral-300/80 to-transparent ml-4" />
-
-                  {/* Skill count badge */}
-                  <span className="
-                    shrink-0 text-xs font-semibold text-neutral-500
-                    bg-white border border-neutral-200/80
-                    px-3 py-1.5 rounded-full
-                  ">
-                    {category.items.length} skills
-                  </span>
+                  </h3>
                 </motion.div>
 
                 {/* Skill cards */}

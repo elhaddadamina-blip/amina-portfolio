@@ -1,12 +1,11 @@
 "use client";
 
 import { useState, type CSSProperties } from "react";
-import { Mail, MapPin, Send, CheckCircle } from "lucide-react";
-import { GithubIcon, LinkedinIcon } from "@/components/ui/BrandIcons";
+import { Send, CheckCircle } from "lucide-react";
 import { palette as P } from "@/lib/palette";
-import { siteConfig } from "@/data";
 import { AnimatedText } from "@/components/ui/AnimatedText";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
+import contactBg from "@/img/contact.webp";
 
 type FormState = {
   name: string;
@@ -23,8 +22,8 @@ export function Contact() {
   const inputStyle = (field: string): CSSProperties => ({
     width: "100%",
     padding: "13px 16px",
-    background: P.ivory,
-    border: `1.5px solid ${focused === field ? P.burgundy : P.border}`,
+    background: "rgba(255, 255, 255, 0.7)",
+    border: `1.5px solid ${focused === field ? P.burgundy : "rgba(255, 255, 255, 0.5)"}`,
     borderRadius: 10,
     fontFamily: "'Montserrat', sans-serif",
     fontSize: 14,
@@ -33,23 +32,33 @@ export function Contact() {
     boxShadow: focused === field ? `0 0 0 3px rgba(128,0,32,0.07)` : "none",
   });
 
-  const contactItems = [
-    { Icon: Mail, label: "Email", val: siteConfig.email, href: `mailto:${siteConfig.email}` },
-    { Icon: MapPin, label: "Location", val: siteConfig.location, href: "#" },
-    { Icon: LinkedinIcon, label: "LinkedIn", val: siteConfig.linkedin, href: siteConfig.linkedinUrl },
-  ];
-
-  const socialItems = [
-    { Icon: GithubIcon, href: siteConfig.githubUrl, label: "GitHub" },
-    { Icon: LinkedinIcon, href: siteConfig.linkedinUrl, label: "LinkedIn" },
-    { Icon: Mail, href: `mailto:${siteConfig.email}`, label: "Email" },
-  ];
 
   return (
-    <section id="contact" style={{ background: P.ivory, padding: "6rem 0" }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 2rem" }}>
+    <section
+      id="contact"
+      style={{
+        background: P.ivory,
+        padding: "6rem 0",
+        position: "relative",
+        overflow: "hidden"
+      }}
+    >
+      {/* Blurred background image (uncropped) */}
+      <div
+        style={{
+          position: "absolute",
+          inset: -20,
+          backgroundImage: `url(${contactBg.src})`,
+          backgroundSize: "contain",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          filter: "blur(2px)",
+          zIndex: 0
+        }}
+      />
+
+      <div style={{ maxWidth: 700, margin: "0 auto", padding: "0 2rem", position: "relative", zIndex: 1 }}>
         <div className="reveal up" style={{ textAlign: "center", marginBottom: "3.5rem" }}>
-          <AnimatedText text="Get In Touch" className="eyebrow" effect="fade" style={{ justifyContent: "center" }} />
           <AnimatedText
             text="Let's start a conversation about your next project"
             el="h2"
@@ -66,143 +75,18 @@ export function Contact() {
           />
         </div>
 
-        <div
-          className="two-col"
-          style={{ display: "grid", gridTemplateColumns: "1fr 1.4fr", gap: "3rem", alignItems: "start" }}
-        >
-          <div className="reveal left">
-            <AnimatedSection delay={0.4}>
-              <p
-                style={{
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontSize: 15,
-                  color: P.muted,
-                  lineHeight: 1.8,
-                  marginBottom: "2.5rem",
-                }}
-              >
-                Whether you&apos;re looking for an intern, a collaborator, or just want to chat about AI and
-                software engineering — my inbox is always open.
-              </p>
-            </AnimatedSection>
-            <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: "2.5rem" }}>
-              {contactItems.map(({ Icon, label, val, href }, i) => (
-                <AnimatedSection key={label} delay={0.5 + i * 0.1}>
-                  <a
-                    href={href}
-                    target={href.startsWith("http") ? "_blank" : undefined}
-                    rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                    style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 14,
-                    background: P.white,
-                    borderRadius: 14,
-                    padding: "14px 18px",
-                    border: `1px solid ${P.border}`,
-                    textDecoration: "none",
-                    transition: "all 0.25s",
-                  }}
-                  onMouseEnter={(e) => {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.border = `1px solid ${P.burgundy}`;
-                    el.style.transform = "translateX(4px)";
-                  }}
-                  onMouseLeave={(e) => {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.border = `1px solid ${P.border}`;
-                    el.style.transform = "";
-                  }}
-                >
-                  <div
-                    style={{
-                      width: 40,
-                      height: 40,
-                      background: P.glow,
-                      borderRadius: 10,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      flexShrink: 0,
-                    }}
-                  >
-                    <Icon size={18} color={P.burgundy} />
-                  </div>
-                  <div>
-                    <div
-                      style={{
-                        fontFamily: "'Montserrat', sans-serif",
-                        fontSize: 11,
-                        color: P.muted,
-                        fontWeight: 500,
-                      }}
-                    >
-                      {label}
-                    </div>
-                    <div
-                      style={{
-                        fontFamily: "'Montserrat', sans-serif",
-                        fontSize: 14,
-                        color: P.dark,
-                        fontWeight: 600,
-                      }}
-                    >
-                      {val}
-                    </div>
-                  </div>
-                </a>
-              </AnimatedSection>
-              ))}
-            </div>
-            <div style={{ display: "flex", gap: 10 }}>
-              {socialItems.map(({ Icon, href, label }, i) => (
-                <AnimatedSection key={label} delay={0.8 + i * 0.1}>
-                  <a
-                    href={href}
-                    target={href.startsWith("http") ? "_blank" : undefined}
-                    rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                    aria-label={label}
-                  style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: 10,
-                    background: P.white,
-                    border: `1px solid ${P.border}`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: P.muted,
-                    textDecoration: "none",
-                    transition: "all 0.22s",
-                  }}
-                  onMouseEnter={(e) => {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.background = P.burgundy;
-                    el.style.color = P.ivory;
-                    el.style.transform = "translateY(-3px)";
-                  }}
-                  onMouseLeave={(e) => {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.background = P.white;
-                    el.style.color = P.muted;
-                    el.style.transform = "";
-                  }}
-                >
-                  <Icon size={18} />
-                </a>
-              </AnimatedSection>
-            ))}
-          </div>
-        </div>
-
-        <AnimatedSection delay={0.6} className="reveal right">
+        <div>
+          <AnimatedSection delay={0.4} className="reveal up">
             {sent ? (
               <div
                 style={{
-                  background: P.white,
+                  background: "rgba(255, 255, 255, 0.45)",
+                  backdropFilter: "blur(16px)",
+                  WebkitBackdropFilter: "blur(16px)",
                   borderRadius: 20,
                   padding: "3rem",
-                  border: `1px solid ${P.border}`,
+                  border: `1px solid rgba(255, 255, 255, 0.4)`,
+                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
                   textAlign: "center",
                 }}
               >
@@ -269,10 +153,13 @@ export function Contact() {
                   setSent(true);
                 }}
                 style={{
-                  background: P.white,
+                  background: "rgba(255, 255, 255, 0.45)",
+                  backdropFilter: "blur(16px)",
+                  WebkitBackdropFilter: "blur(16px)",
                   borderRadius: 20,
                   padding: "2.5rem",
-                  border: `1px solid ${P.border}`,
+                  border: `1px solid rgba(255, 255, 255, 0.4)`,
+                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
                 }}
               >
                 <div

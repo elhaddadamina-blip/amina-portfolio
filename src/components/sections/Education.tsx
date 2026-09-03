@@ -127,6 +127,8 @@ export function Education() {
               </div>
               <button
                 onClick={() => setEnsaOpen(!ensaOpen)}
+                aria-expanded={ensaOpen}
+                aria-controls="ensa-curriculum-panel"
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -162,11 +164,13 @@ export function Education() {
                 />
               </button>
               {ensaOpen && (
-                <div style={{ marginTop: "1rem", display: "flex", flexDirection: "column", gap: 8 }}>
+                <div id="ensa-curriculum-panel" style={{ marginTop: "1rem", display: "flex", flexDirection: "column", gap: 8 }}>
                   {Object.entries(ensaCurriculum).map(([yr, mods]) => (
                     <div key={yr}>
                       <button
                         onClick={() => setEnsaYear(ensaYear === yr ? null : yr)}
+                        aria-expanded={ensaYear === yr}
+                        aria-controls={`ensa-year-panel-${yr.replace(/\s+/g, '-')}`}
                         style={{
                           display: "flex",
                           alignItems: "center",
@@ -200,6 +204,8 @@ export function Education() {
                       </button>
                       {ensaYear === yr && (
                         <div
+                          id={`ensa-year-panel-${yr.replace(/\s+/g, '-')}`}
+                          className="anim-slide-down"
                           style={{
                             paddingTop: 6,
                             paddingBottom: 4,
@@ -340,6 +346,8 @@ export function Education() {
               </div>
               <button
                 onClick={() => setM2Open(!m2Open)}
+                aria-expanded={m2Open}
+                aria-controls="m2-curriculum-panel"
                 style={{
                   display: "flex",
                   alignItems: "center",

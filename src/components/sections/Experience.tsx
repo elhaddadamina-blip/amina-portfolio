@@ -4,12 +4,17 @@ import { MapPin, BarChart2, Code2, Brain } from "lucide-react";
 import { experience } from "@/data";
 import { AnimatedText } from "@/components/ui/AnimatedText";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
+import { ParticlesBackground } from "@/components/ui/ParticlesBackground";
 
 const iconMap = { BarChart2, Code2, Brain };
 
 export function Experience() {
   return (
     <section id="experience" className="relative py-12 md:py-16 bg-[#FAF8F5] text-neutral-900 overflow-hidden">
+
+      {/* Particles in background */}
+      <ParticlesBackground />
+
       <div className="max-w-5xl mx-auto px-6 md:px-12 relative z-10">
 
         {/* HEADER */}
@@ -45,11 +50,10 @@ export function Experience() {
                 >
                   {/* Icon Node */}
                   <div
-                    className={`relative z-10 flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-full border-4 border-[#FAF8F5] transition-transform duration-500 group-hover:scale-110 ${
-                      isFirst
-                        ? "bg-[#6b162c] shadow-[0_0_20px_rgba(107,22,44,0.4)]"
-                        : "bg-white shadow-sm border-neutral-200"
-                    }`}
+                    className={`relative z-10 flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-full border-4 border-[#FAF8F5] transition-transform duration-500 group-hover:scale-110 ${isFirst
+                      ? "bg-[#6b162c] shadow-[0_0_20px_rgba(107,22,44,0.4)]"
+                      : "bg-white shadow-sm border-neutral-200"
+                      }`}
                   >
                     <Icon size={24} className={isFirst ? "text-white" : "text-[#6b162c]"} />
                   </div>

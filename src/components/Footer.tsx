@@ -55,8 +55,8 @@ export function Footer() {
             {/* Social icons — array of components, not objects */}
             <div style={{ display: "flex", gap: 10 }}>
               {([
-                { Icon: GithubIcon, label: "GitHub" }, 
-                { Icon: LinkedinIcon, label: "LinkedIn" }, 
+                { Icon: GithubIcon, label: "GitHub" },
+                { Icon: LinkedinIcon, label: "LinkedIn" },
                 { Icon: Mail, label: "Email" }
               ]).map(({ Icon, label }, i) => (
                 <a
@@ -107,9 +107,9 @@ export function Footer() {
             </div>
             {(
               [
-                { Icon: Mail,          text: siteConfig.email    },
-                { Icon: MapPin,        text: siteConfig.location },
-                { Icon: GraduationCap, text: "M2 France — Sept. 2025" },
+                { Icon: Mail, text: siteConfig.email },
+                { Icon: MapPin, text: siteConfig.location },
+                { Icon: GraduationCap, text: "M2 France — Sept. 2026" },
               ] as { Icon: React.ElementType; text: string }[]
             ).map(({ Icon, text }, i) => (
               <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 10 }}>

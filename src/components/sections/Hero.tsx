@@ -134,7 +134,7 @@ export function Hero() {
           >
             <a
               href="#contact"
-              className="group flex items-center gap-3 bg-[#1c1917] hover:bg-[#800020] text-white px-7 py-3.5 rounded-full transition-all duration-300 shadow-2xl hover:shadow-[#800020]/40 hover:shadow-2xl hover:-translate-y-0.5"
+              className="group flex items-center gap-3 bg-[#1c1917] hover:bg-[#800020] text-white px-7 py-3.5 rounded-full transition-all duration-300 shadow-2xl hover:shadow-[#800020]/40 hover:-translate-y-0.5"
             >
               <span className="text-sm font-semibold">Get in Touch</span>
               <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />

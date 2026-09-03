@@ -50,6 +50,8 @@ export function Projects() {
                 <button
                   key={category}
                   onClick={() => setActive(category)}
+                  aria-pressed={isActive}
+                  aria-label={`Filter by ${category}`}
                   className={`
                     px-5 py-2.5 rounded-full text-xs md:text-sm font-semibold tracking-wide cursor-pointer
                     transition-all duration-300 ease-out

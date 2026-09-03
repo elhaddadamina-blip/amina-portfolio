@@ -1,22 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Montserrat, Plus_Jakarta_Sans, Playfair_Display, JetBrains_Mono } from "next/font/google";
+import { Montserrat, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { ReducedMotionWrapper } from "@/components/ui/ReducedMotionWrapper";
+import { CustomCursor } from "@/components/ui/CustomCursor";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
-  display: "swap",
-});
-
-const plusJakartaSans = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-jakarta",
-  display: "swap",
-});
-
-const playfairDisplay = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair",
   display: "swap",
 });
 
@@ -90,7 +80,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${montserrat.variable} ${plusJakartaSans.variable} ${playfairDisplay.variable} ${jetbrainsMono.variable}`}
+      className={`${montserrat.variable} ${jetbrainsMono.variable}`}
     >
       <body>
         <a
@@ -99,7 +89,10 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
-        {children}
+        <ReducedMotionWrapper>
+          <CustomCursor />
+          {children}
+        </ReducedMotionWrapper>
       </body>
     </html>
   );

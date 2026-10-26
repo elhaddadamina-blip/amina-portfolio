@@ -76,13 +76,23 @@ export function About() {
               </p>
             </AnimatedSection>
 
-            <AnimatedText
-              text="Building data-driven and intelligent systems that solve real problems."
-              el="h2"
-              effect="wipe"
-              delay={0.12}
-              className="mb-9 max-w-[470px] text-[2rem] font-bold leading-[1.18] tracking-tight text-neutral-950 md:text-[2.4rem]"
-            />
+{/* Titre toujours visible sur mobile */}
+<h2 className="mb-7 max-w-[470px] text-[clamp(1.8rem,7vw,2.4rem)] font-bold leading-[1.18] tracking-tight text-neutral-950 lg:hidden">
+  Building data-driven and intelligent systems
+  that solve real problems.
+</h2>
+
+{/* Animation conservée sur ordinateur */}
+<div className="hidden lg:block">
+  <AnimatedText
+    text="Building data-driven and intelligent systems that solve real problems."
+    el="h2"
+    effect="wipe"
+    delay={0.12}
+    className="mb-9 max-w-[470px] text-[2.4rem] font-bold leading-[1.18] tracking-tight text-neutral-950"
+  />
+</div>
+
 
             {/* BIOGRAPHY */}
             <div className="mb-8 max-w-[470px] space-y-4">
@@ -154,8 +164,7 @@ export function About() {
           </div>
 
           {/* RIGHT: ACADEMIC JOURNEY */}
-          <div className="py-20 lg:py-24 lg:pl-16">
-
+<div className="py-12 sm:py-16 lg:py-24 lg:pl-16">
             <AnimatedSection delay={0.1}>
               <div className="mb-9 flex items-center justify-between gap-3 border-b-2 border-neutral-900 pb-3">
                 <h2 className="flex items-center gap-2 text-sm font-semibold text-neutral-950">

@@ -3,7 +3,6 @@
 
 import { MapPin, BarChart2, Code2, Brain } from "lucide-react";
 import { experience } from "@/data";
-import { AnimatedText } from "@/components/ui/AnimatedText";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { ParticlesBackground } from "@/components/ui/ParticlesBackground";
 
@@ -13,61 +12,41 @@ export function Experience() {
   return (
     <section
       id="experience"
-      className="relative py-12 md:py-16 bg-[#FAF8F5] text-neutral-900 overflow-hidden"
+      className="relative overflow-hidden bg-[#FAF8F5] pt-8 pb-14 text-neutral-900 md:pt-10 md:pb-20 scroll-mt-20"
     >
-      {/* Background particles */}
-      <ParticlesBackground />
+      <div className="pointer-events-none hidden md:block">
+        <ParticlesBackground />
+      </div>
 
-      <div className="max-w-5xl mx-auto px-6 md:px-12 relative z-10">
+      <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 md:px-12">
 
-        {/* HEADER */}
-        <div className="flex flex-col items-center text-center mb-16 md:mb-20">
-          <AnimatedText
-            text="Experience"
-            el="h2"
-            effect="fade"
-            className="
-              text-3xl
-              md:text-4xl
-              lg:text-[42px]
-              font-semibold
-              tracking-tight
-              text-neutral-950
-              mb-4
-            "
-          />
+        {/* SECTION HEADER */}
+        <div className="mb-8 text-center md:mb-12">
+          <span className="mb-3 block text-[11px] font-semibold uppercase tracking-[0.22em] text-[#6b162c]">
+            Professional Journey
+          </span>
 
-          <AnimatedText
-            text="Real-world experience in Data, AI & Software Development"
-            el="p"
-            effect="wipe"
-            delay={0.2}
-            className="
-              text-base
-              md:text-lg
-              lg:text-xl
-              text-neutral-500
-              font-normal
-              leading-relaxed
-              max-w-2xl
-            "
-          />
+          <h2 className="text-3xl font-bold tracking-tight text-neutral-950 md:text-4xl">
+            Experience
+          </h2>
 
-          <div className="mt-5 h-[2px] w-12 bg-[#6b162c] rounded-full" />
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-neutral-500 sm:text-base md:text-lg">
+            Real-world experience in Data, AI & Software Development
+          </p>
+
+          <div className="mx-auto mt-5 h-[2px] w-12 rounded-full bg-[#6b162c]" />
         </div>
 
         {/* TIMELINE */}
         <div className="relative">
 
-          {/* Vertical line */}
-          <div className="absolute left-[29px] top-6 bottom-0 w-[2px] bg-gradient-to-b from-[#6b162c] via-[#6b162c]/20 to-transparent" />
+          {/* Line visible only on desktop */}
+          <div className="absolute bottom-8 left-[27px] top-7 hidden w-[2px] bg-gradient-to-b from-[#6b162c] via-[#6b162c]/30 to-transparent md:block" />
 
-          <div className="flex flex-col gap-10 md:gap-14">
+          <div className="flex flex-col gap-5 md:gap-10">
             {experience.map((exp, i) => {
               const Icon =
                 iconMap[exp.icon as keyof typeof iconMap] ?? Code2;
-
-              const isFirst = i === 0;
 
               const missions = Array.isArray(exp.desc)
                 ? exp.desc
@@ -76,109 +55,83 @@ export function Experience() {
               return (
                 <AnimatedSection
                   key={`${exp.co}-${i}`}
-                  delay={0.2 + i * 0.15}
-                  className="relative flex gap-4 md:gap-10 items-start group"
+                  delay={0.1 + i * 0.1}
+                  className="relative flex w-full items-start gap-0 md:gap-6"
                 >
-                  {/* TIMELINE ICON */}
-                  <div
-                    className={`
-                      relative z-10
-                      flex h-[60px] w-[60px]
-                      shrink-0 items-center justify-center
-                      rounded-full border-4
-                      transition-transform duration-500
-                      group-hover:scale-110
-                      ${
-                        isFirst
-                          ? "border-[#FAF8F5] bg-[#6b162c] shadow-[0_0_20px_rgba(107,22,44,0.4)]"
-                          : "border-neutral-200 bg-white shadow-sm"
-                      }
-                    `}
-                  >
-                    <Icon
-                      size={24}
-                      className={
-                        isFirst ? "text-white" : "text-[#6b162c]"
-                      }
-                    />
+                  {/* Desktop timeline icon */}
+                  <div className="relative z-10 hidden h-14 w-14 shrink-0 items-center justify-center rounded-full border-4 border-[#FAF8F5] bg-[#6b162c] text-white shadow-md md:flex">
+                    <Icon size={22} />
                   </div>
 
-                  {/* EXPERIENCE CARD */}
-                  <div
-                    className="
-                      flex-1 min-w-0
-                      bg-white/70 backdrop-blur-md
-                      rounded-3xl p-5 md:p-8
-                      border border-black/[0.04]
-                      shadow-sm
-                      hover:shadow-xl hover:bg-white
-                      transition-all duration-300
-                      group-hover:-translate-y-1
-                    "
-                  >
-                    {/* Title, company and date */}
-                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-5">
+                  {/* Card */}
+                  <article className="min-w-0 w-full flex-1 rounded-2xl border border-[#6b162c]/10 bg-white/95 p-4 shadow-[0_4px_24px_rgba(40,20,25,0.05)] sm:p-6 md:rounded-3xl md:p-8">
 
-                      <div>
-                        <h3 className="text-lg md:text-xl font-semibold text-neutral-900 tracking-tight leading-snug">
+                    {/* Mobile compact icon */}
+                    <div className="mb-4 flex items-center gap-2.5 md:hidden">
+                      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#6b162c] text-white">
+                        <Icon size={18} />
+                      </span>
+
+                      <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[#6b162c]">
+                        Experience {String(i + 1).padStart(2, "0")}
+                      </span>
+                    </div>
+
+                    {/* Heading */}
+                    <div className="mb-4 flex flex-col gap-3 md:mb-6 md:flex-row md:items-start md:justify-between md:gap-4">
+                      <div className="min-w-0">
+                        <h3 className="text-base font-bold leading-snug tracking-tight text-neutral-900 sm:text-lg md:text-xl">
                           {exp.title}
                         </h3>
 
-                        <div className="text-[#6b162c] font-medium mt-1">
+                        <p className="mt-1 text-sm font-medium text-[#6b162c] md:text-base">
                           {exp.co}
-                        </div>
+                        </p>
                       </div>
 
-                      <div className="flex flex-col items-start md:items-end gap-2 shrink-0">
-                        <span className="inline-block px-4 py-1.5 rounded-full bg-[#6b162c]/10 text-[#6b162c] text-xs font-semibold tracking-wide whitespace-nowrap">
+                      <div className="flex shrink-0 flex-wrap items-center gap-2 md:flex-col md:items-end">
+                        <span className="rounded-full bg-[#6b162c]/10 px-3 py-1.5 text-[11px] font-semibold text-[#6b162c] sm:text-xs">
                           {exp.period}
                         </span>
 
-                        <div className="flex items-center gap-1.5 text-xs text-neutral-500 font-medium">
-                          <MapPin size={14} />
-                          <span>{exp.loc}</span>
-                        </div>
+                        <span className="flex items-center gap-1 text-xs text-neutral-500">
+                          <MapPin size={13} />
+                          {exp.loc}
+                        </span>
                       </div>
                     </div>
 
-                    {/* MISSIONS */}
-                    <ul className="space-y-3 mb-6">
+                    {/* Missions */}
+                    <ul className="mb-5 space-y-2.5 md:mb-6 md:space-y-3">
                       {missions.map((mission, index) => (
                         <li
                           key={index}
-                          className="flex items-start gap-3 text-sm md:text-base text-neutral-600 leading-relaxed"
+                          className="flex items-start gap-2.5 text-[13px] leading-[1.65] text-neutral-600 sm:text-sm md:text-[15px]"
                         >
                           <span
-                            className="mt-[9px] h-[6px] w-[6px] shrink-0 rounded-full bg-[#6b162c]"
+                            className="mt-[8px] h-[5px] w-[5px] shrink-0 rounded-full bg-[#6b162c]"
                             aria-hidden="true"
                           />
-
-                          <span>{mission}</span>
+                          <span className="min-w-0">
+                            {mission}
+                          </span>
                         </li>
                       ))}
                     </ul>
 
-                    {/* TECHNOLOGY TAGS */}
-                    <div className="flex flex-wrap gap-2">
+                    {/* Skills */}
+                    <div className="flex flex-wrap gap-1.5 border-t border-neutral-100 pt-4 md:gap-2">
                       {exp.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="
-                            px-3 py-1
-                            text-xs font-medium
-                            text-neutral-700
-                            bg-neutral-100 rounded-lg
-                            border border-neutral-200/60
-                            hover:border-[#6b162c]/30
-                            hover:bg-[#6b162c]/5
-                            transition-colors
-                          "
+                          className="rounded-lg border border-neutral-200/70 bg-neutral-50 px-2.5 py-1 text-[11px] font-medium text-neutral-600 md:text-xs"
                         >
                           {tag}
                         </span>
                       ))}
                     </div>
-                  </div>
+
+                  </article>
                 </AnimatedSection>
               );
             })}

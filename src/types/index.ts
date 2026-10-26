@@ -1,14 +1,15 @@
+
 export type Project = {
   id: string;
   title: string;
   code?: string;
-demo?: string;
-video?: string;
-cat: string | string[];
+  demo?: string;
+  video?: string;
+  cat: string | string[];
   stars: string;
   tags: string[];
   img: string;
-  desc: string[];
+  desc: string;
   images?: string[];
 };
 
@@ -19,8 +20,9 @@ export type Experience = {
   period: string;
   icon: string;
   tags: string[];
-  desc: string;
+  desc: string[];
 };
+
 
 export type SkillCategory = {
   cat: string;

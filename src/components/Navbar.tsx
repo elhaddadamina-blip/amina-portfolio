@@ -25,10 +25,10 @@ type NavItem = {
 };
 
 const mainLinks: NavItem[] = [
+  { label: "About", href: "#about", icon: UserRound },
   { label: "Projects", href: "#projects", icon: FolderKanban },
   { label: "Experience", href: "#experience", icon: BriefcaseBusiness },
   { label: "Skills", href: "#skills", icon: Wrench },
-  { label: "About", href: "#about", icon: UserRound },
 ];
 
 const secondaryLinks: NavItem[] = [
@@ -38,10 +38,10 @@ const secondaryLinks: NavItem[] = [
 
 const sectionIds = [
   "hero",
+  "about",
   "projects",
   "experience",
   "skills",
-  "about",
   "engagements",
   "certifications",
   "cv",

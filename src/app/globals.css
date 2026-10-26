@@ -6,13 +6,13 @@
   --font-montserrat: var(--font-montserrat), system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), monospace;
 }
-
 html {
   scroll-behavior: smooth;
+  background-color: #FAF8F5;
 }
 
 body {
-  background: #f5f5dc;
+  background: #FAF8F5;
   color: #1c1917;
   font-family: var(--font-montserrat), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;

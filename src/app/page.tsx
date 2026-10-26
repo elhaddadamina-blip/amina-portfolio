@@ -15,8 +15,7 @@ import { palette as P } from "@/lib/palette";
 import { Engagements } from "@/components/sections/Engagements";
 export default function Home() {
   return (
-    <main id="main-content" className="bg-[#F5F5DC]">
-      {/* Global components */}
+<main id="main-content" className="bg-[#FAF8F5]">      {/* Global components */}
       <ScrollObserver />
       <ProgressBar />
       <SocialSidebar />
@@ -24,8 +23,8 @@ export default function Home() {
 
      <Hero />
 <About />
-<Experience />
 <Projects />
+<Experience />
 <Skills />
 <Engagements />
 <Certifications />

@@ -1,11 +1,15 @@
 export type Project = {
   id: string;
   title: string;
-  cat: string;
+  code?: string;
+demo?: string;
+video?: string;
+cat: string | string[];
   stars: string;
   tags: string[];
   img: string;
-  desc: string;
+  desc: string[];
+  images?: string[];
 };
 
 export type Experience = {

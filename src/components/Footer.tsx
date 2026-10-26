@@ -1,150 +1,112 @@
-import { Mail, MapPin, GraduationCap, Heart } from "lucide-react";
-import { GithubIcon, LinkedinIcon } from "@/components/ui/BrandIcons";
+
+import {
+  ArrowUpRight,
+  Mail,
+} from "lucide-react";
+
+import {
+  GithubIcon,
+  LinkedinIcon,
+} from "@/components/ui/BrandIcons";
+
 import { BackToTopButton } from "@/components/ui/BackToTopButton";
-import { palette as P } from "@/lib/palette";
-import { navLinks, projects, siteConfig } from "@/data";
+import { siteConfig } from "@/data";
+
+const EMAIL = "elhaddadamina410@gmail.com";
+
+const links = [
+  { label: "Projects", href: "#projects" },
+  { label: "Experience", href: "#experience" },
+  { label: "About", href: "#about" },
+  { label: "Contact", href: "#contact" },
+];
+
+const socials = [
+  {
+    label: "GitHub",
+    icon: GithubIcon,
+    href: "https://github.com/aminael24",
+  },
+  {
+    label: "LinkedIn",
+    icon: LinkedinIcon,
+    href: "https://www.linkedin.com/in/amina-el-haddad-476210341/",
+  },
+  {
+    label: "Gmail",
+    icon: Mail,
+    href: `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(EMAIL)}`,
+  },
+];
 
 export function Footer() {
   return (
-    <footer style={{ background: P.dark, padding: "4rem 0 2rem" }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 2rem" }}>
-        <div
-          className="ft-grid"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "2fr 1fr 1fr 1fr",
-            gap: "3rem",
-            marginBottom: "3rem",
-          }}
-        >
+    <footer className="bg-[#21191c] text-white">
+      <div className="mx-auto max-w-7xl px-6 md:px-12">
+
+        {/* MAIN CONTENT */}
+        <div className="flex flex-col justify-between gap-8 py-10 md:flex-row md:items-center md:py-12">
+
+          {/* IDENTITY */}
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: "1rem" }}>
-              <div
-                style={{
-                  width: 38,
-                  height: 38,
-                  background: P.burgundy,
-                  borderRadius: 9,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontStyle: "italic",
-                  color: P.ivory,
-                  fontWeight: 700,
-                  fontSize: 17,
-                }}
-              >
-                {siteConfig.initial}
-              </div>
-              <span style={{ fontWeight: 700, fontSize: 16, color: P.ivory }}>
-                {siteConfig.name}
-              </span>
-            </div>
-            <p
-              style={{
-                fontSize: 13,
-                color: "rgba(245,245,220,0.65)",
-                lineHeight: 1.7,
-                maxWidth: 260,
-                marginBottom: "1.25rem",
-              }}
+            <a
+              href="#hero"
+              className="text-lg font-bold tracking-tight text-white transition-colors hover:text-[#e5b3c1]"
             >
-              {siteConfig.footerBio}
+              {siteConfig.name}
+            </a>
+
+            <p className="mt-2 text-[13px] leading-relaxed text-white/55">
+              Data Engineering · Artificial Intelligence · Software Engineering
             </p>
 
-            {/* Social icons — array of components, not objects */}
-            <div style={{ display: "flex", gap: 10 }}>
-              {([
-                { Icon: GithubIcon, label: "GitHub" },
-                { Icon: LinkedinIcon, label: "LinkedIn" },
-                { Icon: Mail, label: "Email" }
-              ]).map(({ Icon, label }, i) => (
+            <p className="mt-1 text-xs text-white/40">
+              Based in France · Open to internship opportunities
+            </p>
+          </div>
+
+          {/* NAVIGATION & SOCIALS */}
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-8">
+
+            <nav
+              aria-label="Footer navigation"
+              className="flex flex-wrap items-center gap-x-5 gap-y-3"
+            >
+              {links.map((link) => (
                 <a
-                  key={i}
-                  href="#"
-                  aria-label={label}
-                  className="w-11 h-11 rounded-lg bg-white/5 flex items-center justify-center text-white/60 transition-colors duration-200 hover:bg-[#800020] hover:text-[#F5F5DC]"
+                  key={link.href}
+                  href={link.href}
+                  className="text-[13px] text-white/60 transition-colors hover:text-white"
                 >
-                  <Icon size={18} />
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+
+            <div className="flex items-center gap-2">
+              {socials.map(({ label, icon: Icon, href }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  title={label}
+                  className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/[0.05] text-white/60 transition-all duration-200 hover:border-[#a34b65] hover:bg-[#6b162c] hover:text-white"
+                >
+                  <Icon size={17} />
                 </a>
               ))}
             </div>
           </div>
-
-          <div>
-            <div style={{ fontWeight: 700, fontSize: 13, color: P.ivory, marginBottom: "1rem" }}>
-              Navigation
-            </div>
-            {navLinks.map((l) => (
-              <a
-                key={l}
-                href={`#${l.toLowerCase()}`}
-                className="block text-xs text-white/40 hover:text-white transition-colors duration-200 mb-2"
-              >
-                {l}
-              </a>
-            ))}
-          </div>
-
-          <div>
-            <div style={{ fontWeight: 700, fontSize: 13, color: P.ivory, marginBottom: "1rem" }}>
-              Featured
-            </div>
-            {projects.slice(0, 4).map((p) => (
-              <a
-                key={p.id}
-                href="#projects"
-                className="block text-xs text-white/40 hover:text-white transition-colors duration-200 mb-2"
-              >
-                {p.title}
-              </a>
-            ))}
-          </div>
-
-          <div>
-            <div style={{ fontWeight: 700, fontSize: 13, color: P.ivory, marginBottom: "1rem" }}>
-              Contact
-            </div>
-            {(
-              [
-                { Icon: Mail, text: siteConfig.email },
-                { Icon: MapPin, text: siteConfig.location },
-                { Icon: GraduationCap, text: "M2 France — Sept. 2026" },
-              ] as { Icon: React.ElementType; text: string }[]
-            ).map(({ Icon, text }, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 10 }}>
-                <Icon size={13} color="rgba(245,245,220,0.5)" style={{ marginTop: 1, flexShrink: 0 }} />
-                <span style={{ fontSize: 12, color: "rgba(245,245,220,0.65)", lineHeight: 1.4 }}>
-                  {text}
-                </span>
-              </div>
-            ))}
-          </div>
         </div>
 
-        <div
-          style={{
-            borderTop: "1px solid rgba(245,245,220,0.08)",
-            paddingTop: "1.5rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "1rem",
-          }}
-        >
-          <div
-            style={{
-              fontSize: 12,
-              color: "rgba(245,245,220,0.55)",
-              display: "flex",
-              alignItems: "center",
-              gap: 5,
-            }}
-          >
-            {siteConfig.copyright} <Heart size={11} color={P.burgundy} fill={P.burgundy} />{" "}
-            {siteConfig.copyrightSub}
-          </div>
+        {/* BOTTOM BAR */}
+        <div className="flex flex-col justify-between gap-4 border-t border-white/10 py-5 sm:flex-row sm:items-center">
+          <p className="text-xs text-white/40">
+            © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
+          </p>
+
           <BackToTopButton />
         </div>
       </div>

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -5,86 +6,216 @@ import { useEffect, useRef, useState } from "react";
 export function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
+
   const pos = useRef({ x: 0, y: 0 });
   const ringPos = useRef({ x: 0, y: 0 });
+
+  const hoveringRef = useRef(false);
+  const clickingRef = useRef(false);
+  const nativeCursorRef = useRef(false);
+
   const [hovering, setHovering] = useState(false);
-  const [clicking, setClicking] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [nativeCursor, setNativeCursor] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
   const rafRef = useRef<number>(0);
 
   useEffect(() => {
-    // Hide on touch devices
+    setMounted(true);
+
     const isTouchDevice =
-      "ontouchstart" in window || navigator.maxTouchPoints > 0;
+      window.matchMedia("(pointer: coarse)").matches;
+
     if (isTouchDevice) return;
 
-    const onMove = (e: MouseEvent) => {
-      pos.current = { x: e.clientX, y: e.clientY };
-      if (!visible) setVisible(true);
+    const checkNativeCursor = (target: Element | null) => {
+      const native =
+        !!target?.closest(
+          '[data-media-overlay="true"], [data-media-player="true"], video'
+        ) || !!document.fullscreenElement;
+
+      nativeCursorRef.current = native;
+      setNativeCursor(native);
+
+      return native;
     };
 
-    const onDown = () => setClicking(true);
-    const onUp = () => setClicking(false);
+    const onMove = (e: MouseEvent) => {
+      pos.current = {
+        x: e.clientX,
+        y: e.clientY,
+      };
 
-    const onEnterLeave = () => {
-      // Check if hovering an interactive element
-      const el = document.elementFromPoint(pos.current.x, pos.current.y);
-      if (!el) return;
-      const interactive = el.closest(
+      const element = document.elementFromPoint(
+        e.clientX,
+        e.clientY
+      );
+
+      checkNativeCursor(element);
+
+      setVisible(true);
+    };
+
+    const onDown = () => {
+      clickingRef.current = true;
+    };
+
+    const onUp = () => {
+      clickingRef.current = false;
+    };
+
+    const onHover = (e: MouseEvent) => {
+      const element = e.target as Element;
+
+      if (checkNativeCursor(element)) {
+        hoveringRef.current = false;
+        setHovering(false);
+        return;
+      }
+
+      const interactive = element?.closest?.(
         'a, button, input, textarea, select, [role="button"], label[for], .cursor-pointer'
       );
+
+      hoveringRef.current = !!interactive;
       setHovering(!!interactive);
+    };
+
+    const onFullscreenChange = () => {
+      const element = document.elementFromPoint(
+        pos.current.x,
+        pos.current.y
+      );
+
+      checkNativeCursor(element);
     };
 
     const onLeave = () => setVisible(false);
     const onEnter = () => setVisible(true);
 
-    // Smooth ring follow with RAF
     const animate = () => {
-      ringPos.current.x += (pos.current.x - ringPos.current.x) * 0.15;
-      ringPos.current.y += (pos.current.y - ringPos.current.y) * 0.15;
+      ringPos.current.x +=
+        (pos.current.x - ringPos.current.x) * 0.15;
+
+      ringPos.current.y +=
+        (pos.current.y - ringPos.current.y) * 0.15;
 
       if (dotRef.current) {
-        dotRef.current.style.transform = `translate(${pos.current.x}px, ${pos.current.y}px) translate(-50%, -50%)`;
+        dotRef.current.style.transform = `
+          translate(${pos.current.x}px, ${pos.current.y}px)
+          translate(-50%, -50%)
+        `;
+
+        dotRef.current.style.opacity =
+          nativeCursorRef.current ? "0" : "1";
       }
+
       if (ringRef.current) {
-        ringRef.current.style.transform = `translate(${ringPos.current.x}px, ${ringPos.current.y}px) translate(-50%, -50%) scale(${clicking ? 0.75 : hovering ? 1.6 : 1})`;
+        const scale = clickingRef.current
+          ? 0.75
+          : hoveringRef.current
+          ? 1.6
+          : 1;
+
+        ringRef.current.style.transform = `
+          translate(${ringPos.current.x}px, ${ringPos.current.y}px)
+          translate(-50%, -50%)
+          scale(${scale})
+        `;
+
+        ringRef.current.style.opacity =
+          nativeCursorRef.current ? "0" : "1";
       }
+
       rafRef.current = requestAnimationFrame(animate);
     };
 
-    // Hide default cursor
+    // Cursor rules
     const style = document.createElement("style");
-    style.textContent = "*, *::before, *::after { cursor: none !important; }";
+
+    style.textContent = `
+      @media (pointer: fine) {
+        *, *::before, *::after {
+          cursor: none !important;
+        }
+
+        /* Normal cursor inside galleries */
+        [data-media-overlay="true"],
+        [data-media-overlay="true"] *,
+        [data-media-overlay="true"] *::before,
+        [data-media-overlay="true"] *::after {
+          cursor: auto !important;
+        }
+
+        [data-media-overlay="true"] button,
+        [data-media-overlay="true"] a {
+          cursor: pointer !important;
+        }
+
+        /* Normal cursor for videos */
+        video,
+        video *,
+        [data-media-player="true"],
+        [data-media-player="true"] * {
+          cursor: auto !important;
+        }
+
+        /* Fullscreen video */
+        video:fullscreen,
+        video:-webkit-full-screen {
+          cursor: auto !important;
+        }
+
+        :fullscreen,
+        :fullscreen * {
+          cursor: auto !important;
+        }
+      }
+    `;
+
     document.head.appendChild(style);
 
     window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseover", onEnterLeave);
+    window.addEventListener("mouseover", onHover);
     window.addEventListener("mousedown", onDown);
     window.addEventListener("mouseup", onUp);
+
+    document.addEventListener(
+      "fullscreenchange",
+      onFullscreenChange
+    );
+
     document.addEventListener("mouseleave", onLeave);
     document.addEventListener("mouseenter", onEnter);
 
     rafRef.current = requestAnimationFrame(animate);
 
     return () => {
-      document.head.removeChild(style);
+      style.remove();
+
       window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseover", onEnterLeave);
+      window.removeEventListener("mouseover", onHover);
       window.removeEventListener("mousedown", onDown);
       window.removeEventListener("mouseup", onUp);
+
+      document.removeEventListener(
+        "fullscreenchange",
+        onFullscreenChange
+      );
+
       document.removeEventListener("mouseleave", onLeave);
       document.removeEventListener("mouseenter", onEnter);
+
       cancelAnimationFrame(rafRef.current);
     };
-  }, [visible, hovering, clicking]);
+  }, []);
 
-  // Don't render on SSR
-  if (typeof window === "undefined") return null;
+  if (!mounted) return null;
 
   return (
     <>
-      {/* Dot — snaps to cursor position */}
+      {/* Custom cursor dot */}
       <div
         ref={dotRef}
         aria-hidden="true"
@@ -98,13 +229,13 @@ export function CustomCursor() {
           background: "#6b162c",
           pointerEvents: "none",
           zIndex: 99999,
-          opacity: visible ? 1 : 0,
-          transition: "opacity 0.3s, width 0.2s, height 0.2s",
+          opacity: visible && !nativeCursor ? 1 : 0,
+          transition: "opacity 0.2s",
           willChange: "transform",
         }}
       />
 
-      {/* Ring — trails behind with spring-like ease */}
+      {/* Custom cursor ring */}
       <div
         ref={ringRef}
         aria-hidden="true"
@@ -115,15 +246,19 @@ export function CustomCursor() {
           width: 36,
           height: 36,
           borderRadius: "50%",
-          border: `1.5px solid ${hovering ? "#6b162c" : "rgba(107,22,44,0.35)"}`,
+          border: `1.5px solid ${
+            hovering
+              ? "#6b162c"
+              : "rgba(107,22,44,0.35)"
+          }`,
           background: hovering
             ? "rgba(107,22,44,0.06)"
             : "transparent",
           pointerEvents: "none",
           zIndex: 99998,
-          opacity: visible ? 1 : 0,
+          opacity: visible && !nativeCursor ? 1 : 0,
           transition:
-            "opacity 0.3s, border-color 0.25s, background 0.25s, width 0.25s, height 0.25s",
+            "opacity 0.2s, border-color 0.25s, background 0.25s",
           willChange: "transform",
         }}
       />

@@ -1,157 +1,208 @@
-import { Download, Mail, GraduationCap, Code2, Terminal, Award } from "lucide-react";
+
+"use client";
+
+import {
+  Award,
+  Code2,
+  Download,
+  ExternalLink,
+  GraduationCap,
+  Mail,
+  Terminal,
+  type LucideIcon,
+} from "lucide-react";
+
 import { palette as P } from "@/lib/palette";
 import { cvHighlights } from "@/data";
 import { AnimatedText } from "@/components/ui/AnimatedText";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 
-const iconMap = { GraduationCap, Code2, Terminal, Award };
+// PDF configuration
+const CV_URL = "/CV%20AMINA%20EL%20HADDAD.pdf";
+const DOWNLOAD_NAME = "CV AMINA EL HADDAD.pdf";
+
+const iconMap: Record<string, LucideIcon> = {
+  GraduationCap,
+  Code2,
+  Terminal,
+  Award,
+};
 
 export function CVSection() {
   return (
     <section
       id="cv"
-      style={{ background: P.burgundy, padding: "6rem 0", position: "relative", overflow: "hidden" }}
+      className="relative isolate scroll-mt-24 overflow-hidden py-20 md:py-28"
+      style={{ background: P.burgundy }}
     >
+      {/* BACKGROUND DECORATION */}
       <div
-        style={{
-          position: "absolute",
-          right: "-10%",
-          top: "50%",
-          transform: "translateY(-50%)",
-          width: 500,
-          height: 500,
-          border: "80px solid rgba(245,245,220,0.04)",
-          borderRadius: "50%",
-          pointerEvents: "none",
-        }}
+        aria-hidden="true"
+        className="
+          pointer-events-none
+          absolute -right-28 top-1/2
+          h-[420px] w-[420px]
+          -translate-y-1/2
+          rounded-full
+          border-[60px] border-white/[0.035]
+        "
       />
-      <div
-        style={{
-          position: "absolute",
-          right: "-5%",
-          top: "50%",
-          transform: "translateY(-50%)",
-          width: 350,
-          height: 350,
-          border: "50px solid rgba(245,245,220,0.06)",
-          borderRadius: "50%",
-          pointerEvents: "none",
-        }}
-      />
-      <div
-        style={{
-          maxWidth: 1280,
-          margin: "0 auto",
-          padding: "0 2rem",
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
-        <div
-          className="two-col"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "4rem",
-            alignItems: "center",
-          }}
-        >
-          <div className="reveal left">
-            <AnimatedText text="Curriculum Vitae" className="eyebrow" effect="fade" style={{ color: "rgba(245,245,220,0.5)" }} />
+
+      <div className="relative mx-auto max-w-7xl px-6 md:px-12">
+        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+
+          {/* LEFT: INTRODUCTION */}
+          <div>
+            <AnimatedSection delay={0.05}>
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-white/65">
+                Curriculum Vitae
+              </p>
+            </AnimatedSection>
+
             <AnimatedText
-              text="Download my résumé & let's build something great"
+              text="A closer look at my journey."
               el="h2"
               effect="wipe"
-              delay={0.2}
-              style={{
-                fontSize: "clamp(2rem,4vw,3rem)",
-                fontWeight: 700,
-                color: P.ivory,
-                letterSpacing: "-0.03em",
-                lineHeight: 1.15,
-                marginBottom: "1.25rem",
-              }}
+              delay={0.12}
+              className="
+                max-w-xl text-3xl font-bold
+                leading-tight tracking-tight
+                text-white md:text-5xl
+              "
             />
-            <AnimatedSection delay={0.4}>
-              <p
-                style={{
-                  fontSize: 15,
-                  color: "rgba(245,245,220,0.65)",
-                  lineHeight: 1.75,
-                  marginBottom: "2rem",
-                }}
-              >
-                Full details of my academic background, technical skills, internship experiences, and
-                personal projects — all in a clean one-page PDF.
+
+            <AnimatedSection delay={0.22}>
+              <p className="mt-5 max-w-lg text-[15px] leading-[1.8] text-white/75">
+                Explore my education, technical skills,
+                professional experience and selected projects.
+                View my Data Engineering résumé online or
+                download the PDF for later.
               </p>
-              <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+
+              {/* CV BUTTONS */}
+              <div className="mt-8 flex flex-wrap gap-3">
+
+                {/* VIEW CV */}
                 <a
-                  href="#"
-                  className="inline-flex items-center gap-2 bg-[#F5F5DC] text-[#800020] px-7 py-3.5 rounded-full font-bold text-sm shadow-md transition-all duration-250 hover:-translate-y-1 hover:shadow-xl"
+                  href={CV_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="View CV in a new tab"
+                  className="
+                    inline-flex items-center gap-2
+                    rounded-lg bg-[#FAF8F5]
+                    px-5 py-3
+                    text-sm font-semibold text-[#6b162c]
+                    shadow-sm transition-all duration-200
+                    hover:-translate-y-0.5
+                    hover:bg-white hover:shadow-lg
+                  "
                 >
-                  <Download size={16} /> Download PDF
+                  <ExternalLink size={16} />
+                  View CV
                 </a>
+
+                {/* DOWNLOAD CV */}
                 <a
-                  href="#contact"
-                  className="inline-flex items-center gap-2 bg-transparent text-[#F5F5DC] px-7 py-3.5 rounded-full font-semibold text-sm border-2 border-white/30 transition-all duration-250 hover:border-white/70 hover:bg-white/10"
+                  href={CV_URL}
+                  download={DOWNLOAD_NAME}
+                  aria-label="Download CV as PDF"
+                  className="
+                    inline-flex items-center gap-2
+                    rounded-lg border border-white/40
+                    px-5 py-3
+                    text-sm font-semibold text-white
+                    transition-all duration-200
+                    hover:-translate-y-0.5
+                    hover:border-white hover:bg-white/10
+                  "
                 >
-                  <Mail size={16} /> Contact Instead
+                  <Download size={16} />
+                  Download PDF
                 </a>
+
               </div>
+
+              {/* CONTACT LINK */}
+              <a
+                href="#contact"
+                className="
+                  mt-6 inline-flex items-center gap-2
+                  text-sm font-medium text-white/75
+                  transition-colors
+                  hover:text-white hover:underline
+                "
+              >
+                <Mail size={15} />
+                Prefer to get in touch?
+              </a>
             </AnimatedSection>
           </div>
 
-          <div
-            className="reveal right"
-            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}
-          >
-            {cvHighlights.map((item, i) => {
-              const Icon = iconMap[item.icon as keyof typeof iconMap];
+          {/* RIGHT: CV HIGHLIGHTS */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {cvHighlights.map((item, index) => {
+              const Icon = iconMap[item.icon] ?? Code2;
+
               return (
                 <AnimatedSection
-                  key={item.label}
-                  delay={0.2 + i * 0.15}
-                  className="bg-white/10 rounded-2xl p-6 border border-white/15 transition-colors duration-200 hover:bg-white/15"
+                  key={`${item.label}-${index}`}
+                  delay={0.18 + index * 0.08}
+                  className="h-full"
                 >
-                  <div style={{ marginBottom: 10 }}>
-                    <Icon size={20} color="rgba(245,245,220,0.55)" />
-                  </div>
                   <div
-                    style={{
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontSize: 12,
-                      fontWeight: 700,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.06em",
-                      color: "rgba(245,245,220,0.38)",
-                      marginBottom: 4,
-                    }}
+                    className="
+                      flex h-full flex-col
+                      rounded-2xl
+                      border border-white/15
+                      bg-white/[0.07]
+                      p-6
+                      transition-colors duration-200
+                      hover:bg-white/[0.12]
+                    "
                   >
-                    {item.label}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 14,
-                      fontWeight: 700,
-                      color: P.ivory,
-                      lineHeight: 1.3,
-                    }}
-                  >
-                    {item.val}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: "rgba(245,245,220,0.5)",
-                      marginTop: 3,
-                    }}
-                  >
-                    {item.sub}
+                    {/* ICON */}
+                    <Icon
+                      size={22}
+                      className="mb-5 text-white/80"
+                    />
+
+                    {/* LABEL */}
+                    <p
+                      className="
+                        text-[11px] font-semibold
+                        uppercase tracking-[0.13em]
+                        text-white/60
+                      "
+                    >
+                      {item.label}
+                    </p>
+
+                    {/* VALUE */}
+                    <p
+                      className="
+                        mt-2 text-[15px] font-bold
+                        leading-snug text-white
+                      "
+                    >
+                      {item.val}
+                    </p>
+
+                    {/* DESCRIPTION */}
+                    <p
+                      className="
+                        mt-2 text-xs
+                        leading-relaxed text-white/65
+                      "
+                    >
+                      {item.sub}
+                    </p>
                   </div>
                 </AnimatedSection>
               );
             })}
           </div>
+
         </div>
       </div>
     </section>

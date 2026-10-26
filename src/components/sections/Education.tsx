@@ -1,448 +1,101 @@
 "use client";
 
-import { useState } from "react";
-import { GraduationCap, MapPin, BookOpen, Award, ChevronDown, ChevronRight } from "lucide-react";
-import { palette as P } from "@/lib/palette";
-import { ensaCurriculum, m2Modules } from "@/data";
-import { AnimatedText } from "@/components/ui/AnimatedText";
+import { GraduationCap, BookOpen, MapPin, CalendarDays } from "lucide-react";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
+import { AnimatedText } from "@/components/ui/AnimatedText";
+
+const studies = [
+  {
+    period: "2026 – 2027",
+    title: "Master 2 DOSI",
+    subtitle: "Information Systems Development",
+    school: "Université de Bretagne Occidentale (UBO)",
+    place: "Brest, France",
+    description: "Dual-degree programme with ENSA Tangier, focused on information systems development.",
+    icon: GraduationCap,
+    highlight: true,
+  },
+  {
+    period: "2024 – 2027",
+    title: "Computer Engineering",
+    subtitle: "Data Science & Artificial Intelligence",
+    school: "ENSA Tangier",
+    place: "Tangier, Morocco",
+    description: "Engineering cycle in Computer Science, with a Data Science and Artificial Intelligence specialisation.",
+    icon: GraduationCap,
+    highlight: true,
+  },
+  {
+    period: "2022 – 2024",
+    title: "Integrated Preparatory Cycle",
+    subtitle: "Mathematics · Physics · Engineering Fundamentals",
+    school: "ENSA Tangier",
+    place: "Tangier, Morocco",
+    description: "Two-year integrated preparatory cycle before entering the Computer Engineering programme.",
+    icon: BookOpen,
+    highlight: false,
+  },
+  {
+    period: "2022",
+    title: "Scientific Baccalaureate",
+    subtitle: "Mathematical Sciences A · French Option",
+    school: "Lycée Abi Bakr Errazi",
+    place: "Tangier, Morocco",
+    description: "Baccalaureate in Mathematical Sciences A, French-language option.",
+    icon: BookOpen,
+    highlight: false,
+  },
+];
 
 export function Education() {
-  const [ensaOpen, setEnsaOpen] = useState(false);
-  const [ensaYear, setEnsaYear] = useState<string | null>(null);
-  const [m2Open, setM2Open] = useState(false);
-
   return (
-    <section id="education" style={{ background: P.white, padding: "6rem 0" }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 2rem" }}>
-        <div className="reveal up" style={{ textAlign: "center", marginBottom: "3.5rem" }}>
-          <AnimatedText text="Education" className="eyebrow" effect="fade" style={{ justifyContent: "center" }} />
-          <AnimatedText
-            text="Academic journey across two countries"
-            el="h2"
-            effect="wipe"
-            delay={0.2}
-            style={{
-              fontFamily: "'Montserrat', sans-serif",
-              fontSize: "clamp(1.8rem,4vw,2.8rem)",
-              fontWeight: 700,
-              color: P.dark,
-              letterSpacing: "-0.03em",
-              lineHeight: 1.2,
-            }}
-          />
-        </div>
-
-        <div
-          className="two-col"
-          style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, alignItems: "start" }}
-        >
-          <AnimatedSection
-            delay={0.4}
-            className="reveal left"
-            style={{
-              background: P.ivory,
-              borderRadius: 20,
-              overflow: "hidden",
-              border: `1px solid ${P.border}`,
-            }}
-          >
-            <div
-              style={{
-                background: `linear-gradient(135deg,${P.burgundy},${P.burgundyDk})`,
-                padding: "2rem",
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
-                <div
-                  style={{
-                    width: 52,
-                    height: 52,
-                    background: "rgba(245,245,220,0.15)",
-                    borderRadius: 14,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                  }}
-                >
-                  <GraduationCap size={26} color={P.ivory} />
-                </div>
-                <div>
-                  <div
-                    style={{
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontSize: 10,
-                      letterSpacing: "0.1em",
-                      color: "rgba(245,245,220,0.5)",
-                      marginBottom: 4,
-                    }}
-                  >
-                    2020 — 2025
-                  </div>
-                  <h3
-                    style={{
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontWeight: 700,
-                      fontSize: 17,
-                      color: P.ivory,
-                      margin: 0,
-                      lineHeight: 1.3,
-                    }}
-                  >
-                    Engineering Degree
-                  </h3>
-                  <div
-                    style={{
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontSize: 13,
-                      color: "rgba(245,245,220,0.7)",
-                      marginTop: 4,
-                    }}
-                  >
-                    Computer Engineering + Data Science & AI
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 8 }}>
-                    <MapPin size={12} color="rgba(245,245,220,0.5)" />
-                    <span
-                      style={{
-                        fontFamily: "'Montserrat', sans-serif",
-                        fontSize: 12,
-                        color: "rgba(245,245,220,0.7)",
-                      }}
-                    >
-                      ENSA Tangier 🇲🇦
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div style={{ padding: "1.5rem" }}>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: "1.25rem" }}>
-                {["5-Year Programme", "60+ Modules", "Bac+5 Engineering", "CTI Accredited"].map((t) => (
-                  <span key={t} className="tag">
-                    {t}
-                  </span>
-                ))}
-              </div>
-              <button
-                onClick={() => setEnsaOpen(!ensaOpen)}
-                aria-expanded={ensaOpen}
-                aria-controls="ensa-curriculum-panel"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  width: "100%",
-                  background: "none",
-                  border: `1px solid ${P.border}`,
-                  borderRadius: 10,
-                  padding: "12px 16px",
-                  cursor: "pointer",
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: P.dark,
-                  transition: "background 0.2s",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.background = P.ivoryDk;
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.background = "none";
-                }}
-              >
-                <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <BookOpen size={14} color={P.burgundy} /> View Full Curriculum
-                </span>
-                <ChevronDown
-                  size={16}
-                  style={{
-                    transform: ensaOpen ? "rotate(180deg)" : "rotate(0)",
-                    transition: "transform 0.3s",
-                  }}
-                />
-              </button>
-              {ensaOpen && (
-                <div id="ensa-curriculum-panel" style={{ marginTop: "1rem", display: "flex", flexDirection: "column", gap: 8 }}>
-                  {Object.entries(ensaCurriculum).map(([yr, mods]) => (
-                    <div key={yr}>
-                      <button
-                        onClick={() => setEnsaYear(ensaYear === yr ? null : yr)}
-                        aria-expanded={ensaYear === yr}
-                        aria-controls={`ensa-year-panel-${yr.replace(/\s+/g, '-')}`}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          width: "100%",
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          padding: "8px 0",
-                          borderBottom: `1px solid ${P.borderLt}`,
-                        }}
-                      >
-                        <span
-                          style={{
-                            fontFamily: "'Montserrat', sans-serif",
-                            fontSize: 13,
-                            fontWeight: 600,
-                            color: P.dark,
-                          }}
-                        >
-                          {yr}
-                        </span>
-                        <ChevronRight
-                          size={14}
-                          color={P.muted}
-                          style={{
-                            transform: ensaYear === yr ? "rotate(90deg)" : "rotate(0)",
-                            transition: "transform 0.25s",
-                          }}
-                        />
-                      </button>
-                      {ensaYear === yr && (
-                        <div
-                          id={`ensa-year-panel-${yr.replace(/\s+/g, '-')}`}
-                          className="anim-slide-down"
-                          style={{
-                            paddingTop: 6,
-                            paddingBottom: 4,
-                            paddingLeft: 8,
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: 4,
-                          }}
-                        >
-                          {mods.map((m) => (
-                            <div key={m} style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
-                              <div
-                                style={{
-                                  width: 5,
-                                  height: 5,
-                                  borderRadius: "50%",
-                                  background: P.burgundy,
-                                  marginTop: 7,
-                                  flexShrink: 0,
-                                }}
-                              />
-                              <span
-                                style={{
-                                  fontFamily: "'Montserrat', sans-serif",
-                                  fontSize: 12,
-                                  color: P.muted,
-                                  lineHeight: 1.5,
-                                }}
-                              >
-                                {m}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
+    <section id="education" className="scroll-mt-20 bg-[#FAF8F5] py-24 md:py-32">
+      <div className="mx-auto max-w-7xl px-6 md:px-12">
+        <AnimatedSection delay={0.05}>
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#6b162c]">My academic background</p>
+        </AnimatedSection>
+        <AnimatedText
+          text="Education"
+          el="h2"
+          effect="wipe"
+          className="mb-4 text-4xl font-bold tracking-tight text-neutral-950 sm:text-5xl"
+        />
+        <AnimatedSection delay={0.12}>
+          <p className="mb-12 max-w-2xl text-[15px] leading-relaxed text-neutral-600">
+            From mathematical sciences to Computer Engineering in Tangier, followed by a dual-degree Master's programme in France.
+          </p>
+        </AnimatedSection>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {studies.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <AnimatedSection key={`${item.period}-${item.title}`} delay={0.14 + index * 0.08} className="h-full">
+                <article className="flex h-full flex-col overflow-hidden rounded-3xl border border-[#6b162c]/10 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                  <div className={`relative flex items-start gap-4 px-7 py-7 ${item.highlight ? "bg-[#6b162c] text-white" : "bg-[#211f31] text-white"}`}>
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/15">
+                      <Icon size={23} />
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </AnimatedSection>
-
-          <AnimatedSection
-            delay={0.6}
-            className="reveal right"
-            style={{
-              background: P.ivory,
-              borderRadius: 20,
-              overflow: "hidden",
-              border: `1px solid ${P.border}`,
-            }}
-          >
-            <div style={{ background: "linear-gradient(135deg,#1a1a2e,#16213e)", padding: "2rem" }}>
-              <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
-                <div
-                  style={{
-                    width: 52,
-                    height: 52,
-                    background: "rgba(255,255,255,0.08)",
-                    borderRadius: 14,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                  }}
-                >
-                  <Award size={26} color={P.ivory} />
-                </div>
-                <div>
-                  <div
-                    style={{
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontSize: 12,
-                      letterSpacing: "0.1em",
-                      color: "rgba(255,255,255,0.7)",
-                      marginBottom: 4,
-                    }}
-                  >
-                    2025 — 2026
-                  </div>
-                  <h3
-                    style={{
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontWeight: 700,
-                      fontSize: 17,
-                      color: P.ivory,
-                      margin: 0,
-                      lineHeight: 1.3,
-                    }}
-                  >
-                    Master&apos;s Degree M2
-                  </h3>
-                  <div
-                    style={{
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontSize: 13,
-                      color: "rgba(255,255,255,0.7)",
-                      marginTop: 4,
-                    }}
-                  >
-                    DOSI — Développement Logiciel des SI
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 8 }}>
-                    <MapPin size={12} color="rgba(255,255,255,0.5)" />
-                    <span
-                      style={{
-                        fontFamily: "'Montserrat', sans-serif",
-                        fontSize: 12,
-                        color: "rgba(255,255,255,0.5)",
-                      }}
-                    >
-                      France 🇫🇷 — Autumn 2025
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div style={{ padding: "1.5rem" }}>
-              <p
-                style={{
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontSize: 13,
-                  color: P.muted,
-                  lineHeight: 1.7,
-                  marginBottom: "1.25rem",
-                }}
-              >
-                High-level training in new technologies and industrialisation tools currently in use in
-                development and maintenance of modern Information Systems, with multicultural
-                communication exposure.
-              </p>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: "1.5rem" }}>
-                {["30 ECTS S9", "30 ECTS S10", "6-Month Internship", "Agile Project"].map((t) => (
-                  <span key={t} className="tag">
-                    {t}
-                  </span>
-                ))}
-              </div>
-              <button
-                onClick={() => setM2Open(!m2Open)}
-                aria-expanded={m2Open}
-                aria-controls="m2-curriculum-panel"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  width: "100%",
-                  background: "none",
-                  border: `1px solid ${P.border}`,
-                  borderRadius: 10,
-                  padding: "12px 16px",
-                  cursor: "pointer",
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: P.dark,
-                  transition: "background 0.2s",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.background = P.ivoryDk;
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.background = "none";
-                }}
-              >
-                <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <BookOpen size={14} color={P.burgundy} /> View Programme Modules
-                </span>
-                <ChevronDown
-                  size={16}
-                  style={{
-                    transform: m2Open ? "rotate(180deg)" : "rotate(0)",
-                    transition: "transform 0.3s",
-                  }}
-                />
-              </button>
-              {m2Open && (
-                <div style={{ marginTop: "1rem" }}>
-                  {Object.entries(m2Modules).map(([sem, mods]) => (
-                    <div key={sem} style={{ marginBottom: "1rem" }}>
-                      <div
-                        style={{
-                          fontFamily: "'Montserrat', sans-serif",
-                          fontSize: 12,
-                          fontWeight: 700,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                          color: P.burgundy,
-                          marginBottom: 8,
-                        }}
-                      >
-                        {sem}
-                      </div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                        {mods.map((m) => (
-                          <div
-                            key={m.name}
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              padding: "8px 12px",
-                              background: P.white,
-                              borderRadius: 8,
-                              border: `1px solid ${P.borderLt}`,
-                            }}
-                          >
-                            <span
-                              style={{
-                                fontFamily: "'Montserrat', sans-serif",
-                                fontSize: 12,
-                                color: P.dark,
-                              }}
-                            >
-                              {m.name}
-                            </span>
-                            <span
-                              style={{
-                                fontFamily: "'Montserrat', sans-serif",
-                                fontSize: 11,
-                                color: P.burgundy,
-                                fontWeight: 600,
-                                marginLeft: 8,
-                              }}
-                            >
-                              {m.ects} ECTS
-                            </span>
-                          </div>
-                        ))}
-                      </div>
+                    <div className="min-w-0">
+                      <span className="mb-2 flex items-center gap-1.5 text-xs font-medium text-white/75"><CalendarDays size={13} />{item.period}</span>
+                      <h3 className="text-xl font-bold leading-snug">{item.title}</h3>
+                      <p className="mt-1 text-sm text-white/85">{item.subtitle}</p>
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </AnimatedSection>
+                  </div>
+                  <div className="flex flex-1 flex-col gap-3 px-7 py-6">
+                    <p className="font-semibold text-neutral-900">{item.school}</p>
+                    <p className="flex items-center gap-1.5 text-xs text-neutral-500"><MapPin size={13} />{item.place}</p>
+                    <p className="text-[14px] leading-relaxed text-neutral-600">{item.description}</p>
+                  </div>
+                </article>
+              </AnimatedSection>
+            );
+          })}
         </div>
+        <AnimatedSection delay={0.5}>
+          <p className="mt-8 text-sm text-neutral-500">
+            The 2024–2027 engineering programme and the 2026–2027 Master's programme overlap as part of the dual-degree pathway.
+          </p>
+        </AnimatedSection>
       </div>
     </section>
   );

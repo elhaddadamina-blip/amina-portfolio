@@ -1,284 +1,484 @@
+
 "use client";
 
-import { useState, type CSSProperties } from "react";
-import { Send, CheckCircle } from "lucide-react";
-import { palette as P } from "@/lib/palette";
-import { AnimatedText } from "@/components/ui/AnimatedText";
+import { useState, type FormEvent } from "react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  BriefcaseBusiness,
+  Check,
+  Copy,
+  ExternalLink,
+  Github,
+  Linkedin,
+  Mail,
+  MapPin,
+  Send,
+} from "lucide-react";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
-import contactBg from "@/img/contact.webp";
 
-type FormState = {
+const EMAIL = "elhaddadamina410@gmail.com";
+const LINKEDIN =
+  "https://www.linkedin.com/in/amina-el-haddad-476210341/";
+const GITHUB = "https://github.com/aminael24";
+
+const subjects = [
+  "Internship opportunity",
+  "Data Engineering",
+  "Artificial Intelligence / ML",
+  "Backend Development",
+  "Collaboration",
+  "Other",
+];
+
+type ContactForm = {
   name: string;
   email: string;
   subject: string;
   message: string;
 };
 
-export function Contact() {
-  const [form, setForm] = useState<FormState>({ name: "", email: "", subject: "", message: "" });
-  const [sent, setSent] = useState(false);
-  const [focused, setFocused] = useState<string | null>(null);
+const inputClass =
+  "w-full rounded-xl border border-neutral-200 bg-[#FAF8F5] px-4 py-3.5 text-sm text-neutral-900 outline-none transition-colors placeholder:text-neutral-400 focus:border-[#6b162c]/60 focus:bg-white focus:ring-2 focus:ring-[#6b162c]/10";
 
-  const inputStyle = (field: string): CSSProperties => ({
-    width: "100%",
-    padding: "13px 16px",
-    background: "rgba(255, 255, 255, 0.7)",
-    border: `1.5px solid ${focused === field ? P.burgundy : "rgba(255, 255, 255, 0.5)"}`,
-    borderRadius: 10,
-    fontFamily: "'Montserrat', sans-serif",
-    fontSize: 14,
-    color: P.dark,
-    transition: "border-color 0.2s, box-shadow 0.2s",
-    boxShadow: focused === field ? `0 0 0 3px rgba(128,0,32,0.07)` : "none",
+export function Contact() {
+  const [form, setForm] = useState<ContactForm>({
+    name: "",
+    email: "",
+    subject: "Internship opportunity",
+    message: "",
   });
 
+  const [copied, setCopied] = useState(false);
+  const [feedback, setFeedback] = useState("");
+  const [gmailFallbackUrl, setGmailFallbackUrl] = useState("");
+
+  function update(field: keyof ContactForm, value: string) {
+    setForm((previous) => ({
+      ...previous,
+      [field]: value,
+    }));
+    setFeedback("");
+    setGmailFallbackUrl("");
+  }
+
+  function emailContent() {
+    const subject =
+      `[Portfolio] ${form.subject} - ${form.name.trim()}`;
+
+    const body = [
+      "Hello Amina,",
+      "",
+      form.message.trim(),
+      "",
+      "Best regards,",
+      form.name.trim(),
+      `Email: ${form.email.trim()}`,
+    ].join("\n");
+
+    return { subject, body };
+  }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const { subject, body } = emailContent();
+
+    const params = new URLSearchParams({
+      view: "cm",
+      fs: "1",
+      to: EMAIL,
+      su: subject,
+      body,
+    });
+
+    const url =
+      `https://mail.google.com/mail/?${params.toString()}`;
+
+    const newTab = window.open(url, "_blank");
+
+    if (newTab) {
+      try {
+        newTab.opener = null;
+      } catch {
+        // Browser restricts external tab access.
+      }
+
+      setFeedback(
+        "Gmail is open in a new tab. Review your email and click Send."
+      );
+      setGmailFallbackUrl("");
+    } else {
+      setFeedback(
+        "Your browser blocked the new tab. Use the link below to open Gmail."
+      );
+      setGmailFallbackUrl(url);
+    }
+  }
+
+  async function copyEmail() {
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      window.location.href = `mailto:${EMAIL}`;
+    }
+  }
+
+  const { subject, body } = emailContent();
+
+  const alternativeEmailUrl =
+    `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}` +
+    `&body=${encodeURIComponent(body)}`;
 
   return (
     <section
       id="contact"
-      style={{
-        background: P.ivory,
-        padding: "6rem 0",
-        position: "relative",
-        overflow: "hidden"
-      }}
+      className="scroll-mt-24 bg-[#FAF8F5] py-20 md:py-28"
     >
-      {/* Blurred background image (uncropped) */}
-      <div
-        style={{
-          position: "absolute",
-          inset: -20,
-          backgroundImage: `url(${contactBg.src})`,
-          backgroundSize: "contain",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          filter: "blur(2px)",
-          zIndex: 0
-        }}
-      />
+      <div className="mx-auto max-w-7xl px-6 md:px-12">
 
-      <div style={{ maxWidth: 700, margin: "0 auto", padding: "0 2rem", position: "relative", zIndex: 1 }}>
-        <div className="reveal up" style={{ textAlign: "center", marginBottom: "3.5rem" }}>
-          <AnimatedText
-            text="Let's start a conversation about your next project"
-            el="h2"
-            effect="wipe"
-            delay={0.2}
-            style={{
-              fontFamily: "'Montserrat', sans-serif",
-              fontSize: "clamp(1.8rem,4vw,2.8rem)",
-              fontWeight: 700,
-              color: P.dark,
-              letterSpacing: "-0.03em",
-              lineHeight: 1.2,
-            }}
-          />
-        </div>
+        {/* SECTION HEADER */}
+        <AnimatedSection>
+          <p className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#6b162c]">
+            <Mail size={16} />
+            Get in touch
+          </p>
 
-        <div>
-          <AnimatedSection delay={0.4} className="reveal up">
-            {sent ? (
-              <div
-                style={{
-                  background: "rgba(255, 255, 255, 0.45)",
-                  backdropFilter: "blur(16px)",
-                  WebkitBackdropFilter: "blur(16px)",
-                  borderRadius: 20,
-                  padding: "3rem",
-                  border: `1px solid rgba(255, 255, 255, 0.4)`,
-                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
-                  textAlign: "center",
-                }}
-              >
-                <div
-                  style={{
-                    width: 64,
-                    height: 64,
-                    background: "#ECFDF5",
-                    borderRadius: "50%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    margin: "0 auto 1.5rem",
-                  }}
-                >
-                  <CheckCircle size={32} color="#059669" />
+          <h2 className="text-3xl font-bold tracking-tight text-neutral-950 md:text-5xl">
+            Let&apos;s connect.
+          </h2>
+
+          <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-neutral-600">
+            Have an internship opportunity, a data or AI project,
+            or a collaboration in mind? Feel free to reach out.
+          </p>
+        </AnimatedSection>
+
+        <div className="mt-12 grid grid-cols-1 items-start gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12">
+
+          {/* LEFT: CONTACT INFORMATION */}
+          <AnimatedSection delay={0.1}>
+            <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm md:p-8">
+
+              <h3 className="text-xl font-bold text-neutral-900">
+                Contact information
+              </h3>
+
+              <p className="mt-2 text-sm leading-relaxed text-neutral-600">
+                I&apos;m currently studying in France and looking
+                for a six-month end-of-studies internship
+                starting in April 2027.
+              </p>
+
+              <div className="mt-7 space-y-5">
+
+                {/* LOCATION */}
+                <div className="flex items-start gap-3">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#6b162c]/10 text-[#6b162c]">
+                    <MapPin size={19} />
+                  </span>
+
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
+                      Location
+                    </p>
+                    <p className="mt-1 text-sm font-semibold text-neutral-900">
+                      France
+                    </p>
+                    <p className="text-xs text-neutral-500">
+                      Open to opportunities across France
+                    </p>
+                  </div>
                 </div>
-                <h3
-                  style={{
-                    fontFamily: "'Montserrat', sans-serif",
-                    fontSize: "1.5rem",
-                    fontWeight: 700,
-                    color: P.dark,
-                    marginBottom: 8,
-                  }}
-                >
-                  Message Sent!
-                </h3>
-                <p
-                  style={{
-                    fontFamily: "'Montserrat', sans-serif",
-                    fontSize: 14,
-                    color: P.muted,
-                    lineHeight: 1.7,
-                  }}
-                >
-                  Thank you — I&apos;ll get back to you within 24 hours.
-                </p>
-                <button
-                  onClick={() => {
-                    setSent(false);
-                    setForm({ name: "", email: "", subject: "", message: "" });
-                  }}
-                  style={{
-                    marginTop: "1.5rem",
-                    background: P.burgundy,
-                    color: P.ivory,
-                    border: "none",
-                    padding: "10px 24px",
-                    borderRadius: 8,
-                    cursor: "pointer",
-                    fontFamily: "'Montserrat', sans-serif",
-                    fontSize: 14,
-                    fontWeight: 600,
-                  }}
-                >
-                  Send Another
-                </button>
+
+                {/* AVAILABILITY */}
+                <div className="flex items-start gap-3">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#6b162c]/10 text-[#6b162c]">
+                    <BriefcaseBusiness size={19} />
+                  </span>
+
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
+                      Availability
+                    </p>
+                    <p className="mt-1 text-sm font-semibold text-neutral-900">
+                      April 2027 · 6 months
+                    </p>
+                    <p className="text-xs text-neutral-500">
+                      End-of-studies internship
+                    </p>
+                  </div>
+                </div>
+
+                {/* EMAIL */}
+                <div className="flex items-start gap-3">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#6b162c]/10 text-[#6b162c]">
+                    <Mail size={19} />
+                  </span>
+
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
+                      Email
+                    </p>
+
+                    <a
+                      href={`mailto:${EMAIL}`}
+                      className="mt-1 block break-all text-sm font-semibold text-neutral-900 hover:text-[#6b162c]"
+                    >
+                      {EMAIL}
+                    </a>
+
+                    <button
+                      type="button"
+                      onClick={copyEmail}
+                      className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[#6b162c] hover:underline"
+                      aria-label="Copy email address"
+                    >
+                      {copied ? (
+                        <Check size={14} />
+                      ) : (
+                        <Copy size={14} />
+                      )}
+
+                      {copied ? "Copied" : "Copy email"}
+                    </button>
+                  </div>
+                </div>
               </div>
-            ) : (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  setSent(true);
-                }}
-                style={{
-                  background: "rgba(255, 255, 255, 0.45)",
-                  backdropFilter: "blur(16px)",
-                  WebkitBackdropFilter: "blur(16px)",
-                  borderRadius: 20,
-                  padding: "2.5rem",
-                  border: `1px solid rgba(255, 255, 255, 0.4)`,
-                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
-                }}
-              >
-                <div
-                  style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 14 }}
-                >
-                  {(["name", "email"] as const).map((f) => (
-                    <div key={f}>
-                      <label
-                        htmlFor={f}
-                        style={{
-                          fontFamily: "'Montserrat', sans-serif",
-                          fontSize: 12,
-                          fontWeight: 600,
-                          color: P.dark,
-                          display: "block",
-                          marginBottom: 6,
-                        }}
-                      >
-                        {f === "name" ? "Name" : "Email"}
-                      </label>
-                      <input
-                        id={f}
-                        required
-                        type={f === "email" ? "email" : "text"}
-                        value={form[f]}
-                        onChange={(e) => setForm((v) => ({ ...v, [f]: e.target.value }))}
-                        onFocus={() => setFocused(f)}
-                        onBlur={() => setFocused(null)}
-                        placeholder={f === "name" ? "Your name" : "your@email.com"}
-                        style={inputStyle(f)}
-                      />
-                    </div>
+
+              {/* SKILLS */}
+              <div className="mt-7 border-t border-neutral-100 pt-6">
+                <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-neutral-400">
+                  Main interests
+                </p>
+
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    "Data Engineering",
+                    "AI / ML",
+                    "Backend Development",
+                  ].map((skill) => (
+                    <span
+                      key={skill}
+                      className="rounded-md border border-[#6b162c]/15 bg-[#FAF8F5] px-3 py-1.5 text-xs font-medium text-[#6b162c]"
+                    >
+                      {skill}
+                    </span>
                   ))}
                 </div>
-                <div style={{ marginBottom: 14 }}>
+              </div>
+            </div>
+
+            {/* SOCIAL LINKS */}
+            <div className="mt-5 grid grid-cols-2 gap-3">
+              <a
+                href={LINKEDIN}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between rounded-xl border border-neutral-200 bg-white px-4 py-3.5 text-sm font-semibold text-neutral-800 transition-colors hover:border-[#6b162c]/30 hover:text-[#6b162c]"
+              >
+                <span className="flex items-center gap-2">
+                  <Linkedin size={17} />
+                  LinkedIn
+                </span>
+                <ArrowUpRight size={15} />
+              </a>
+
+              <a
+                href={GITHUB}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between rounded-xl border border-neutral-200 bg-white px-4 py-3.5 text-sm font-semibold text-neutral-800 transition-colors hover:border-[#6b162c]/30 hover:text-[#6b162c]"
+              >
+                <span className="flex items-center gap-2">
+                  <Github size={17} />
+                  GitHub
+                </span>
+                <ArrowUpRight size={15} />
+              </a>
+            </div>
+          </AnimatedSection>
+
+          {/* RIGHT: CONTACT FORM */}
+          <AnimatedSection delay={0.18}>
+            <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm md:p-8">
+
+              {/* FORM HEADER */}
+              <div className="mb-7 flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="text-xl font-bold text-neutral-900">
+                    Send a message
+                  </h3>
+
+                  <p className="mt-2 text-sm text-neutral-500">
+                    Complete the form to prepare your message in Gmail.
+                  </p>
+                </div>
+
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#6b162c]/10 text-[#6b162c]">
+                  <Send size={19} />
+                </span>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-5">
+
+                {/* NAME + EMAIL */}
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <div>
+                    <label
+                      htmlFor="contact-name"
+                      className="mb-2 block text-xs font-semibold text-neutral-700"
+                    >
+                      Your name <span className="text-[#6b162c]">*</span>
+                    </label>
+
+                    <input
+                      id="contact-name"
+                      type="text"
+                      autoComplete="name"
+                      required
+                      maxLength={120}
+                      placeholder="Your full name"
+                      value={form.name}
+                      onChange={(event) =>
+                        update("name", event.target.value)
+                      }
+                      className={inputClass}
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="contact-email"
+                      className="mb-2 block text-xs font-semibold text-neutral-700"
+                    >
+                      Your email <span className="text-[#6b162c]">*</span>
+                    </label>
+
+                    <input
+                      id="contact-email"
+                      type="email"
+                      autoComplete="email"
+                      required
+                      maxLength={254}
+                      placeholder="name@company.com"
+                      value={form.email}
+                      onChange={(event) =>
+                        update("email", event.target.value)
+                      }
+                      className={inputClass}
+                    />
+                  </div>
+                </div>
+
+                {/* SUBJECT */}
+                <div>
                   <label
-                    htmlFor="subject"
-                    style={{
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontSize: 12,
-                      fontWeight: 600,
-                      color: P.dark,
-                      display: "block",
-                      marginBottom: 6,
-                    }}
+                    htmlFor="contact-subject"
+                    className="mb-2 block text-xs font-semibold text-neutral-700"
                   >
                     Subject
                   </label>
-                  <input
-                    id="subject"
+
+                  <select
+                    id="contact-subject"
                     value={form.subject}
-                    onChange={(e) => setForm((v) => ({ ...v, subject: e.target.value }))}
-                    onFocus={() => setFocused("subject")}
-                    onBlur={() => setFocused(null)}
-                    placeholder="What's this about?"
-                    style={inputStyle("subject")}
-                  />
-                </div>
-                <div style={{ marginBottom: "1.5rem" }}>
-                  <label
-                    htmlFor="message"
-                    style={{
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontSize: 12,
-                      fontWeight: 600,
-                      color: P.dark,
-                      display: "block",
-                      marginBottom: 6,
-                    }}
+                    onChange={(event) =>
+                      update("subject", event.target.value)
+                    }
+                    className={inputClass}
                   >
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    required
-                    rows={5}
-                    value={form.message}
-                    onChange={(e) => setForm((v) => ({ ...v, message: e.target.value }))}
-                    onFocus={() => setFocused("message")}
-                    onBlur={() => setFocused(null)}
-                    placeholder="Tell me about your project or opportunity..."
-                    style={{ ...inputStyle("message"), resize: "vertical", minHeight: 130 } as CSSProperties}
-                  />
+                    {subjects.map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </select>
                 </div>
+
+                {/* MESSAGE */}
+                <div>
+                  <label
+                    htmlFor="contact-message"
+                    className="mb-2 block text-xs font-semibold text-neutral-700"
+                  >
+                    Your message <span className="text-[#6b162c]">*</span>
+                  </label>
+
+                  <textarea
+                    id="contact-message"
+                    rows={6}
+                    minLength={10}
+                    maxLength={2000}
+                    required
+                    placeholder="Tell me about the opportunity or project..."
+                    value={form.message}
+                    onChange={(event) =>
+                      update("message", event.target.value)
+                    }
+                    className={`${inputClass} min-h-[150px] resize-y`}
+                  />
+
+                  <p className="mt-1 text-right text-xs text-neutral-400">
+                    {form.message.length} / 2000
+                  </p>
+                </div>
+
+                {/* GMAIL BUTTON */}
                 <button
                   type="submit"
-                  style={{
-                    width: "100%",
-                    background: P.burgundy,
-                    color: P.ivory,
-                    border: "none",
-                    padding: 14,
-                    borderRadius: 10,
-                    cursor: "pointer",
-                    fontFamily: "'Montserrat', sans-serif",
-                    fontSize: 14,
-                    fontWeight: 700,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 8,
-                    transition: "all 0.25s",
-                    boxShadow: "0 4px 16px rgba(128,0,32,0.25)",
-                  }}
-                  onMouseEnter={(e) => {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.background = P.burgundyDk;
-                    el.style.transform = "translateY(-2px)";
-                  }}
-                  onMouseLeave={(e) => {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.background = P.burgundy;
-                    el.style.transform = "";
-                  }}
+                  className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#6b162c] px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#521122] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6b162c]"
                 >
-                  <Send size={16} /> Send Message
+                  Continue in Gmail
+
+                  <ArrowRight
+                    size={16}
+                    className="transition-transform group-hover:translate-x-1"
+                  />
                 </button>
+
+                {/* OPENING FEEDBACK */}
+                {feedback && (
+                  <div
+                    role="status"
+                    aria-live="polite"
+                    className="rounded-lg bg-[#FAF8F5] px-4 py-3 text-sm text-[#6b162c]"
+                  >
+                    {feedback}
+
+                    {gmailFallbackUrl && (
+                      <a
+                        href={gmailFallbackUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="ml-2 inline-flex items-center gap-1 font-semibold underline"
+                      >
+                        Open Gmail
+                        <ExternalLink size={13} />
+                      </a>
+                    )}
+                  </div>
+                )}
+
+                {/* ALTERNATIVE EMAIL */}
+                <div className="flex flex-col items-center gap-2 text-center">
+                  <p className="text-xs leading-relaxed text-neutral-500">
+                    Gmail opens with the message pre-filled.
+                    You must click Send in Gmail to deliver it.
+                  </p>
+
+                  <a
+                    href={alternativeEmailUrl}
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#6b162c] hover:underline"
+                  >
+                    Prefer Outlook or another email app?
+                    <ArrowUpRight size={14} />
+                  </a>
+                </div>
               </form>
-            )}
+            </div>
           </AnimatedSection>
         </div>
       </div>

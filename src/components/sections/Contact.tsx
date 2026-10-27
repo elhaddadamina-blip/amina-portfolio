@@ -132,6 +132,7 @@ function handleSubmit(event: FormEvent<HTMLFormElement>) {
   }
 }
 
+
   async function copyEmail() {
     try {
       await navigator.clipboard.writeText(EMAIL);

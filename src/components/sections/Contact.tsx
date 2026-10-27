@@ -1,7 +1,8 @@
 
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent, type MouseEvent } from "react";
+
 import {
   ArrowRight,
   ArrowUpRight,
@@ -18,6 +19,7 @@ import {
 
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 
+// CONTACT INFORMATION
 const EMAIL = "elhaddadamina410@gmail.com";
 
 const LINKEDIN =
@@ -44,6 +46,62 @@ type ContactForm = {
 const inputClass =
   "w-full rounded-xl border border-neutral-200 bg-[#FAF8F5] px-4 py-3.5 text-sm text-neutral-900 outline-none transition-colors placeholder:text-neutral-400 focus:border-[#6b162c]/60 focus:bg-white focus:ring-2 focus:ring-[#6b162c]/10";
 
+// BUILD EMAIL LINKS
+function buildEmailLinks(
+  subject = "",
+  body = ""
+) {
+  // Default email app
+  const mailtoParams = new URLSearchParams();
+
+  if (subject) {
+    mailtoParams.set("subject", subject);
+  }
+
+  if (body) {
+    mailtoParams.set("body", body);
+  }
+
+  const mailtoQuery = mailtoParams.toString();
+
+  const mailtoUrl =
+    `mailto:${EMAIL}` +
+    (mailtoQuery ? `?${mailtoQuery}` : "");
+
+  // Gmail Web compose
+  const gmailParams = new URLSearchParams({
+    to: EMAIL,
+    su: subject,
+    body,
+    tf: "cm",
+  });
+
+  const gmailUrl =
+    "https://mail.google.com/mail/u/0/?" +
+    gmailParams.toString();
+
+  // Outlook Web compose
+  const outlookParams = new URLSearchParams({
+    to: EMAIL,
+    subject,
+    body,
+  });
+
+  const outlookUrl =
+    "https://outlook.live.com/mail/0/deeplink/compose?" +
+    outlookParams.toString();
+
+  return {
+    mailtoUrl,
+    gmailUrl,
+    outlookUrl,
+  };
+}
+
+// DIRECT LINKS ALWAYS HAVE AMINA AS RECIPIENT.
+// They do not depend on the form fields.
+const directLinks = buildEmailLinks();
+
 export function Contact() {
   const [form, setForm] = useState<ContactForm>({
     name: "",
@@ -54,7 +112,9 @@ export function Contact() {
 
   const [copied, setCopied] = useState(false);
   const [feedback, setFeedback] = useState("");
+  const [fallbackUrl, setFallbackUrl] = useState("");
 
+  // UPDATE FORM
   function update(
     field: keyof ContactForm,
     value: string
@@ -65,27 +125,17 @@ export function Contact() {
     }));
 
     setFeedback("");
+    setFallbackUrl("");
   }
 
+  // GENERATE MESSAGE FROM FORM
   function emailContent() {
     const name = form.name.trim();
     const senderEmail = form.email.trim();
     const message = form.message.trim();
 
-    const hasContent = Boolean(
-      name || senderEmail || message
-    );
-
-    if (!hasContent) {
-      return {
-        subject: "",
-        body: "",
-      };
-    }
-
     const subject =
-      `[Portfolio] ${form.subject}` +
-      (name ? ` - ${name}` : "");
+      `[Portfolio] ${form.subject} - ${name}`;
 
     const body = [
       "Hello Amina,",
@@ -94,7 +144,7 @@ export function Contact() {
       "",
       "Best regards,",
       name,
-      senderEmail ? `Email: ${senderEmail}` : "",
+      `Email: ${senderEmail}`,
     ].join("\n");
 
     return {
@@ -103,80 +153,36 @@ export function Contact() {
     };
   }
 
-  function getEmailUrls() {
-    const { subject, body } = emailContent();
-
-    // Default email application
-    const mailtoParams = new URLSearchParams();
-
-    if (subject) {
-      mailtoParams.set("subject", subject);
-    }
-
-    if (body) {
-      mailtoParams.set("body", body);
-    }
-
-    const mailtoQuery = mailtoParams.toString();
-
-    const mailtoUrl =
-      `mailto:${EMAIL}` +
-      (mailtoQuery ? `?${mailtoQuery}` : "");
-
-    // Gmail Web compose
-    const gmailParams = new URLSearchParams({
-      view: "cm",
-      fs: "1",
-      to: EMAIL,
-      su: subject,
-      body,
-    });
-
-    const gmailUrl =
-      "https://mail.google.com/mail/?" +
-      gmailParams.toString();
-
-    // Outlook Web compose
-    const outlookParams = new URLSearchParams({
-      to: EMAIL,
-      subject,
-      body,
-    });
-
-    const outlookUrl =
-      "https://outlook.live.com/mail/0/deeplink/compose?" +
-      outlookParams.toString();
-
-    return {
-      mailtoUrl,
-      gmailUrl,
-      outlookUrl,
-    };
+  // MOBILE DETECTION
+  function isMobileDevice() {
+    return /Android|iPhone|iPad|iPod/i.test(
+      navigator.userAgent
+    );
   }
 
+  // OPEN GMAIL AFTER FORM VALIDATION
   function handleSubmit(
     event: FormEvent<HTMLFormElement>
   ) {
     event.preventDefault();
 
-    const { mailtoUrl, gmailUrl } = getEmailUrls();
+    const { subject, body } = emailContent();
 
-    const isMobile =
-      /Android|iPhone|iPad|iPod/i.test(
-        navigator.userAgent
-      );
+    const links = buildEmailLinks(subject, body);
 
     setFeedback("");
+    setFallbackUrl("");
 
-    if (isMobile) {
-      // On mobile, use the configured email app.
-      window.location.href = mailtoUrl;
+    if (isMobileDevice()) {
+      // On Android, this opens the configured email app.
+      // If Gmail is the default, Gmail prepares the draft.
+      window.location.href = links.mailtoUrl;
       return;
     }
 
-    // Desktop: open Gmail compose.
+    // Desktop: open Gmail Web compose.
     const newTab = window.open(
-      gmailUrl,
+      links.gmailUrl,
       "_blank"
     );
 
@@ -188,11 +194,26 @@ export function Contact() {
       );
     } else {
       setFeedback(
-        "Your browser blocked the new tab. Please allow pop-ups or use the direct Gmail link below."
+        "Your browser blocked the new tab. Open Gmail using the link below."
       );
+
+      setFallbackUrl(links.gmailUrl);
     }
   }
 
+  // DIRECT GMAIL LINK - NO FORM REQUIRED
+  function handleDirectGmail(
+    event: MouseEvent<HTMLAnchorElement>
+  ) {
+    if (isMobileDevice()) {
+      event.preventDefault();
+
+      // Always prepares an email to Amina.
+      window.location.href = directLinks.mailtoUrl;
+    }
+  }
+
+  // COPY EMAIL - WORKS ON MOBILE AND DESKTOP
   async function copyEmail() {
     try {
       await navigator.clipboard.writeText(EMAIL);
@@ -203,15 +224,13 @@ export function Contact() {
         setCopied(false);
       }, 2000);
     } catch {
-      window.location.href = `mailto:${EMAIL}`;
+      // Useful fallback for browsers blocking clipboard.
+      window.prompt(
+        "Copy this email address:",
+        EMAIL
+      );
     }
   }
-
-  const {
-    mailtoUrl,
-    gmailUrl,
-    outlookUrl,
-  } = getEmailUrls();
 
   return (
     <section
@@ -240,7 +259,7 @@ export function Contact() {
 
         <div className="mt-8 grid grid-cols-1 items-start gap-6 lg:mt-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12">
 
-          {/* CONTACT INFORMATION */}
+          {/* LEFT: CONTACT INFORMATION */}
           <AnimatedSection delay={0.1}>
             <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6 md:p-8">
 
@@ -321,6 +340,7 @@ export function Contact() {
                       type="button"
                       onClick={copyEmail}
                       className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[#6b162c] hover:underline"
+                      aria-label="Copy email address"
                     >
                       {copied ? (
                         <Check size={14} />
@@ -328,7 +348,9 @@ export function Contact() {
                         <Copy size={14} />
                       )}
 
-                      {copied ? "Copied" : "Copy email"}
+                      {copied
+                        ? "Copied!"
+                        : "Copy email"}
                     </button>
                   </div>
                 </div>
@@ -359,6 +381,7 @@ export function Contact() {
 
             {/* SOCIAL LINKS */}
             <div className="mt-5 grid grid-cols-2 gap-3">
+
               <a
                 href={LINKEDIN}
                 target="_blank"
@@ -389,10 +412,11 @@ export function Contact() {
             </div>
           </AnimatedSection>
 
-          {/* CONTACT FORM */}
+          {/* RIGHT: CONTACT FORM */}
           <AnimatedSection delay={0.18}>
             <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6 md:p-8">
 
+              {/* FORM HEADER */}
               <div className="mb-7 flex items-start justify-between gap-4">
                 <div>
                   <h3 className="text-xl font-bold text-neutral-900">
@@ -417,6 +441,7 @@ export function Contact() {
 
                 {/* NAME AND EMAIL */}
                 <div className="grid gap-5 sm:grid-cols-2">
+
                   <div>
                     <label
                       htmlFor="contact-name"
@@ -529,7 +554,7 @@ export function Contact() {
                   </p>
                 </div>
 
-                {/* SUBMIT TO GMAIL */}
+                {/* MAIN GMAIL BUTTON */}
                 <button
                   type="submit"
                   className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#6b162c] px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#521122] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6b162c]"
@@ -549,61 +574,84 @@ export function Contact() {
                     aria-live="polite"
                     className="rounded-lg bg-[#FAF8F5] px-4 py-3 text-sm text-[#6b162c]"
                   >
-                    {feedback}
+                    <p>{feedback}</p>
+
+                    {fallbackUrl && (
+                      <a
+                        href={fallbackUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-2 inline-flex items-center gap-1 font-semibold underline"
+                      >
+                        Open Gmail
+                        <ExternalLink size={13} />
+                      </a>
+                    )}
                   </div>
                 )}
 
                 {/* DIRECT CONTACT OPTIONS */}
-                <div className="space-y-3 border-t border-neutral-100 pt-5">
+                <div className="space-y-4 border-t border-neutral-100 pt-5">
 
                   <p className="text-center text-xs font-medium text-neutral-500">
-                    Or contact me directly — no form required
+                    Prefer to contact me directly?
+                    No form required.
                   </p>
 
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
 
-                    {/* OUTLOOK WEB */}
+                    {/* GMAIL DIRECT */}
                     <a
-                      href={outlookUrl}
+                      href={directLinks.gmailUrl}
+                      onClick={handleDirectGmail}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 transition-colors hover:border-[#6b162c]/40 hover:bg-[#FAF8F5] hover:text-[#6b162c]"
+                      className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 transition-all hover:border-[#6b162c]/40 hover:bg-[#FAF8F5] hover:text-[#6b162c]"
                     >
-                      Open Outlook Web
-                      <ExternalLink size={15} />
+                      Write with Gmail
+                      <Mail size={16} />
                     </a>
 
-                    {/* DEFAULT EMAIL APP */}
+                    {/* OUTLOOK DIRECT */}
                     <a
-                      href={mailtoUrl}
-                      className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 transition-colors hover:border-[#6b162c]/40 hover:bg-[#FAF8F5] hover:text-[#6b162c]"
+                      href={directLinks.outlookUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 transition-all hover:border-[#6b162c]/40 hover:bg-[#FAF8F5] hover:text-[#6b162c]"
                     >
-                      Other email app
-                      <Mail size={15} />
+                      Write with Outlook
+                      <ExternalLink size={15} />
                     </a>
                   </div>
 
-                  {/* DIRECT GMAIL */}
-                  <a
-                    href={gmailUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 py-2 text-xs font-semibold text-[#6b162c] hover:underline"
+                  {/* COPY EMAIL */}
+                  <button
+                    type="button"
+                    onClick={copyEmail}
+                    className="mx-auto flex items-center justify-center gap-2 py-2 text-xs font-semibold text-[#6b162c] hover:underline"
                   >
-                    Open Gmail Web directly
-                    <ArrowUpRight size={14} />
-                  </a>
+                    {copied ? (
+                      <Check size={15} />
+                    ) : (
+                      <Copy size={15} />
+                    )}
+
+                    {copied
+                      ? "Email copied!"
+                      : `Copy ${EMAIL}`}
+                  </button>
 
                   <p className="text-center text-xs leading-relaxed text-neutral-400">
-                    Your email service may ask you to sign in.
-                    Outlook Web requires a Microsoft account.
-                    You must click Send to deliver your message.
+                    The recipient is pre-filled when supported.
+                    Sign in to Gmail or Outlook if requested.
+                    Review your message before clicking Send.
                   </p>
                 </div>
 
               </form>
             </div>
           </AnimatedSection>
+
         </div>
       </div>
     </section>

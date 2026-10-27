@@ -88,7 +88,13 @@ function handleSubmit(event: FormEvent<HTMLFormElement>) {
   const mailtoUrl =
     `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}` +
     `&body=${encodeURIComponent(body)}`;
-
+const outlookUrl =
+  "https://outlook.live.com/mail/0/deeplink/compose?" +
+  new URLSearchParams({
+    to: EMAIL,
+    subject,
+    body,
+  }).toString();
   // Mobile: open the installed email app with prefilled fields.
   const isMobile = /Android|iPhone|iPad|iPod/i.test(
     navigator.userAgent
@@ -486,13 +492,29 @@ function handleSubmit(event: FormEvent<HTMLFormElement>) {
                     You must click Send in Gmail to deliver it.
                   </p>
 
-                  <a
-                    href={alternativeEmailUrl}
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#6b162c] hover:underline"
-                  >
-                    Prefer Outlook or another email app?
-                    <ArrowUpRight size={14} />
-                  </a>
+                
+<div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
+  {/* Open Outlook in browser */}
+  <a
+    href={outlookUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#6b162c] hover:underline"
+  >
+    Open in Outlook
+    <ArrowUpRight size={14} />
+  </a>
+
+  {/* Open the user's default email app */}
+  <a
+    href={alternativeEmailUrl}
+    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#6b162c] hover:underline"
+  >
+    Other email app
+    <ArrowUpRight size={14} />
+  </a>
+</div>
+
                 </div>
               </form>
             </div>

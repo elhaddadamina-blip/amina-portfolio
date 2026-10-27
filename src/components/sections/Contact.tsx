@@ -79,42 +79,58 @@ export function Contact() {
     return { subject, body };
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  
+function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  event.preventDefault();
 
-    const { subject, body } = emailContent();
+  const { subject, body } = emailContent();
 
-    const params = new URLSearchParams({
-      view: "cm",
-      fs: "1",
-      to: EMAIL,
-      su: subject,
-      body,
-    });
+  const mailtoUrl =
+    `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}` +
+    `&body=${encodeURIComponent(body)}`;
 
-    const url =
-      `https://mail.google.com/mail/?${params.toString()}`;
+  // Mobile: open the installed email app with prefilled fields.
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(
+    navigator.userAgent
+  );
 
-    const newTab = window.open(url, "_blank");
-
-    if (newTab) {
-      try {
-        newTab.opener = null;
-      } catch {
-        // Browser restricts external tab access.
-      }
-
-      setFeedback(
-        "Gmail is open in a new tab. Review your email and click Send."
-      );
-      setGmailFallbackUrl("");
-    } else {
-      setFeedback(
-        "Your browser blocked the new tab. Use the link below to open Gmail."
-      );
-      setGmailFallbackUrl(url);
-    }
+  if (isMobile) {
+    window.location.href = mailtoUrl;
+    return;
   }
+
+  // Desktop: preserve the Gmail web compose experience.
+  const params = new URLSearchParams({
+    view: "cm",
+    fs: "1",
+    to: EMAIL,
+    su: subject,
+    body,
+  });
+
+  const gmailUrl =
+    `https://mail.google.com/mail/?${params.toString()}`;
+
+  const newTab = window.open(gmailUrl, "_blank");
+
+  if (newTab) {
+    try {
+      newTab.opener = null;
+    } catch {
+      // Some browsers restrict access to the new tab.
+    }
+
+    setFeedback(
+      "Gmail is open in a new tab. Review your email and click Send."
+    );
+    setGmailFallbackUrl("");
+  } else {
+    setFeedback(
+      "Your browser blocked the new tab. Use the link below."
+    );
+    setGmailFallbackUrl(gmailUrl);
+  }
+}
 
   async function copyEmail() {
     try {

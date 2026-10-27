@@ -333,8 +333,7 @@ export function Skills() {
   return (
     <section
   id="skills"
-  className="relative scroll-mt-20 overflow-hidden bg-[#FAF8F5] pt-20 pb-6 md:pt-24 md:pb-8"
->
+className="relative scroll-mt-24 overflow-hidden bg-[#FAF8F5] pt-10 pb-8 md:pt-16 md:pb-10">
       {/* Ambient background glow */}
       <div className="pointer-events-none absolute -top-40 left-1/2 h-[440px] w-[700px] -translate-x-1/2 rounded-full bg-[#6b162c] opacity-[0.07] blur-[120px]" />
 
@@ -342,7 +341,7 @@ export function Skills() {
 
         {/* ── Header ─────────────────────── */}
 
-        <div className="mb-14 max-w-3xl">
+        <div className="mb-8 max-w-3xl md:mb-12">
           <AnimatedSection
             delay={0.05}
             className="mb-5 flex items-center gap-2.5"
@@ -354,21 +353,36 @@ export function Skills() {
             </span>
           </AnimatedSection>
 
-          <AnimatedText
-            text="Technologies behind my work"
-            el="h2"
-            effect="wipe"
-            delay={0.15}
-            className="block text-4xl font-semibold leading-tight tracking-tight text-neutral-900 md:text-6xl"
-          />
+       
+{/* Mobile: visible immediately, no scroll animation */}
+<div className="lg:hidden">
+  <h2 className="text-[clamp(1.85rem,7vw,2.75rem)] font-semibold leading-[1.15] tracking-tight text-neutral-900">
+    Technologies behind my work
+  </h2>
 
-          <AnimatedText
-            text="from data to software."
-            el="span"
-            effect="fade"
-            delay={0.3}
-            className="mt-2 block font-serif text-3xl italic font-normal text-[#6b162c] md:text-5xl"
-          />
+  <p className="mt-3 font-serif text-[clamp(1.65rem,6vw,2.5rem)] italic leading-tight text-[#6b162c]">
+    from data to software.
+  </p>
+</div>
+
+{/* Desktop: preserve the existing animation */}
+<div className="hidden lg:block">
+  <AnimatedText
+    text="Technologies behind my work"
+    el="h2"
+    effect="wipe"
+    delay={0.15}
+    className="block text-4xl font-semibold leading-tight tracking-tight text-neutral-900 md:text-6xl"
+  />
+
+  <AnimatedText
+    text="from data to software."
+    el="span"
+    effect="fade"
+    delay={0.3}
+    className="mt-2 block font-serif text-3xl italic font-normal text-[#6b162c] md:text-5xl"
+  />
+</div>
 
           <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-neutral-500">
             Technologies I use to build data pipelines,

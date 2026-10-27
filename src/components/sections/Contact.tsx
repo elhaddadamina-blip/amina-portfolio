@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -15,11 +15,14 @@ import {
   MapPin,
   Send,
 } from "lucide-react";
+
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 
 const EMAIL = "elhaddadamina410@gmail.com";
+
 const LINKEDIN =
   "https://www.linkedin.com/in/amina-el-haddad-476210341/";
+
 const GITHUB = "https://github.com/aminael24";
 
 const subjects = [
@@ -38,10 +41,14 @@ type ContactForm = {
   message: string;
 };
 
+type EmailProvider = "gmail" | "outlook" | "default";
+
 const inputClass =
   "w-full rounded-xl border border-neutral-200 bg-[#FAF8F5] px-4 py-3.5 text-sm text-neutral-900 outline-none transition-colors placeholder:text-neutral-400 focus:border-[#6b162c]/60 focus:bg-white focus:ring-2 focus:ring-[#6b162c]/10";
 
 export function Contact() {
+  const formRef = useRef<HTMLFormElement>(null);
+
   const [form, setForm] = useState<ContactForm>({
     name: "",
     email: "",
@@ -51,15 +58,16 @@ export function Contact() {
 
   const [copied, setCopied] = useState(false);
   const [feedback, setFeedback] = useState("");
-  const [gmailFallbackUrl, setGmailFallbackUrl] = useState("");
+  const [fallbackUrl, setFallbackUrl] = useState("");
 
   function update(field: keyof ContactForm, value: string) {
     setForm((previous) => ({
       ...previous,
       [field]: value,
     }));
+
     setFeedback("");
-    setGmailFallbackUrl("");
+    setFallbackUrl("");
   }
 
   function emailContent() {
@@ -79,88 +87,134 @@ export function Contact() {
     return { subject, body };
   }
 
-  
-function handleSubmit(event: FormEvent<HTMLFormElement>) {
-  event.preventDefault();
+  function getEmailUrls() {
+    const { subject, body } = emailContent();
 
-  const { subject, body } = emailContent();
+    const mailtoUrl =
+      `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}` +
+      `&body=${encodeURIComponent(body)}`;
 
-  const mailtoUrl =
-    `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}` +
-    `&body=${encodeURIComponent(body)}`;
-const outlookUrl =
-  "https://outlook.live.com/mail/0/deeplink/compose?" +
-  new URLSearchParams({
-    to: EMAIL,
-    subject,
-    body,
-  }).toString();
-  // Mobile: open the installed email app with prefilled fields.
-  const isMobile = /Android|iPhone|iPad|iPod/i.test(
-    navigator.userAgent
-  );
+    const gmailParams = new URLSearchParams({
+      view: "cm",
+      fs: "1",
+      to: EMAIL,
+      su: subject,
+      body,
+    });
 
-  if (isMobile) {
-    window.location.href = mailtoUrl;
-    return;
+    const gmailUrl =
+      `https://mail.google.com/mail/?${gmailParams.toString()}`;
+
+    const outlookParams = new URLSearchParams({
+      to: EMAIL,
+      subject,
+      body,
+    });
+
+    const outlookUrl =
+      "https://outlook.live.com/mail/0/deeplink/compose?" +
+      outlookParams.toString();
+
+    return {
+      mailtoUrl,
+      gmailUrl,
+      outlookUrl,
+    };
   }
 
-  // Desktop: preserve the Gmail web compose experience.
-  const params = new URLSearchParams({
-    view: "cm",
-    fs: "1",
-    to: EMAIL,
-    su: subject,
-    body,
-  });
-
-  const gmailUrl =
-    `https://mail.google.com/mail/?${params.toString()}`;
-
-  const newTab = window.open(gmailUrl, "_blank");
-
-  if (newTab) {
-    try {
-      newTab.opener = null;
-    } catch {
-      // Some browsers restrict access to the new tab.
+  function openEmail(provider: EmailProvider) {
+    if (!formRef.current?.reportValidity()) {
+      return;
     }
 
-    setFeedback(
-      "Gmail is open in a new tab. Review your email and click Send."
-    );
-    setGmailFallbackUrl("");
-  } else {
-    setFeedback(
-      "Your browser blocked the new tab. Use the link below."
-    );
-    setGmailFallbackUrl(gmailUrl);
-  }
-}
+    const { mailtoUrl, gmailUrl, outlookUrl } = getEmailUrls();
 
+    const isMobile =
+      /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    setFeedback("");
+    setFallbackUrl("");
+
+    // Open the device's default email application.
+    if (provider === "default") {
+      window.location.href = mailtoUrl;
+      return;
+    }
+
+    // Mobile Gmail:
+    // mailto is more reliable than Gmail Web compose
+    // when Android redirects mail.google.com to Gmail.
+    if (provider === "gmail" && isMobile) {
+      window.location.href = mailtoUrl;
+      return;
+    }
+
+    // Outlook opens Outlook Web on desktop and mobile.
+    if (provider === "outlook") {
+      if (isMobile) {
+        window.location.href = outlookUrl;
+        return;
+      }
+
+      const newTab = window.open(
+        outlookUrl,
+        "_blank",
+        "noopener,noreferrer"
+      );
+
+      if (!newTab) {
+        setFallbackUrl(outlookUrl);
+        setFeedback(
+          "If Outlook did not open, use the link below."
+        );
+      }
+
+      return;
+    }
+
+    // Desktop Gmail
+    const newTab = window.open(
+      gmailUrl,
+      "_blank",
+      "noopener,noreferrer"
+    );
+
+    if (!newTab) {
+      setFallbackUrl(gmailUrl);
+      setFeedback(
+        "If Gmail did not open, use the link below."
+      );
+    } else {
+      setFeedback(
+        "Review your message in Gmail and click Send."
+      );
+    }
+  }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    openEmail("gmail");
+  }
 
   async function copyEmail() {
     try {
       await navigator.clipboard.writeText(EMAIL);
       setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
+
+      window.setTimeout(() => {
+        setCopied(false);
+      }, 2000);
     } catch {
       window.location.href = `mailto:${EMAIL}`;
     }
   }
 
-  const { subject, body } = emailContent();
-
-  const alternativeEmailUrl =
-    `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}` +
-    `&body=${encodeURIComponent(body)}`;
-
   return (
     <section
       id="contact"
-      className="scroll-mt-24 bg-[#FAF8F5] py-20 md:py-28"
+      className="scroll-mt-24 bg-[#FAF8F5] py-12 md:py-20"
     >
-      <div className="mx-auto max-w-7xl px-6 md:px-12">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-12">
 
         {/* SECTION HEADER */}
         <AnimatedSection>
@@ -179,11 +233,11 @@ const outlookUrl =
           </p>
         </AnimatedSection>
 
-        <div className="mt-12 grid grid-cols-1 items-start gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12">
+        <div className="mt-8 grid grid-cols-1 items-start gap-6 lg:mt-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12">
 
           {/* LEFT: CONTACT INFORMATION */}
           <AnimatedSection delay={0.1}>
-            <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm md:p-8">
+            <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6 md:p-8">
 
               <h3 className="text-xl font-bold text-neutral-900">
                 Contact information
@@ -207,9 +261,11 @@ const outlookUrl =
                     <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
                       Location
                     </p>
+
                     <p className="mt-1 text-sm font-semibold text-neutral-900">
                       France
                     </p>
+
                     <p className="text-xs text-neutral-500">
                       Open to opportunities across France
                     </p>
@@ -226,9 +282,11 @@ const outlookUrl =
                     <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
                       Availability
                     </p>
+
                     <p className="mt-1 text-sm font-semibold text-neutral-900">
                       April 2027 · 6 months
                     </p>
+
                     <p className="text-xs text-neutral-500">
                       End-of-studies internship
                     </p>
@@ -271,7 +329,7 @@ const outlookUrl =
                 </div>
               </div>
 
-              {/* SKILLS */}
+              {/* MAIN INTERESTS */}
               <div className="mt-7 border-t border-neutral-100 pt-6">
                 <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-neutral-400">
                   Main interests
@@ -296,16 +354,18 @@ const outlookUrl =
 
             {/* SOCIAL LINKS */}
             <div className="mt-5 grid grid-cols-2 gap-3">
+
               <a
                 href={LINKEDIN}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-between rounded-xl border border-neutral-200 bg-white px-4 py-3.5 text-sm font-semibold text-neutral-800 transition-colors hover:border-[#6b162c]/30 hover:text-[#6b162c]"
+                className="flex items-center justify-between rounded-xl border border-neutral-200 bg-white px-3 py-3.5 text-sm font-semibold text-neutral-800 transition-colors hover:border-[#6b162c]/30 hover:text-[#6b162c] sm:px-4"
               >
                 <span className="flex items-center gap-2">
                   <Linkedin size={17} />
                   LinkedIn
                 </span>
+
                 <ArrowUpRight size={15} />
               </a>
 
@@ -313,12 +373,13 @@ const outlookUrl =
                 href={GITHUB}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-between rounded-xl border border-neutral-200 bg-white px-4 py-3.5 text-sm font-semibold text-neutral-800 transition-colors hover:border-[#6b162c]/30 hover:text-[#6b162c]"
+                className="flex items-center justify-between rounded-xl border border-neutral-200 bg-white px-3 py-3.5 text-sm font-semibold text-neutral-800 transition-colors hover:border-[#6b162c]/30 hover:text-[#6b162c] sm:px-4"
               >
                 <span className="flex items-center gap-2">
                   <Github size={17} />
                   GitHub
                 </span>
+
                 <ArrowUpRight size={15} />
               </a>
             </div>
@@ -326,7 +387,7 @@ const outlookUrl =
 
           {/* RIGHT: CONTACT FORM */}
           <AnimatedSection delay={0.18}>
-            <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm md:p-8">
+            <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6 md:p-8">
 
               {/* FORM HEADER */}
               <div className="mb-7 flex items-start justify-between gap-4">
@@ -336,7 +397,8 @@ const outlookUrl =
                   </h3>
 
                   <p className="mt-2 text-sm text-neutral-500">
-                    Complete the form to prepare your message in Gmail.
+                    Fill in the form and choose your preferred
+                    email service.
                   </p>
                 </div>
 
@@ -345,16 +407,22 @@ const outlookUrl =
                 </span>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form
+                ref={formRef}
+                onSubmit={handleSubmit}
+                className="space-y-5"
+              >
 
                 {/* NAME + EMAIL */}
                 <div className="grid gap-5 sm:grid-cols-2">
+
                   <div>
                     <label
                       htmlFor="contact-name"
                       className="mb-2 block text-xs font-semibold text-neutral-700"
                     >
-                      Your name <span className="text-[#6b162c]">*</span>
+                      Your name{" "}
+                      <span className="text-[#6b162c]">*</span>
                     </label>
 
                     <input
@@ -377,7 +445,8 @@ const outlookUrl =
                       htmlFor="contact-email"
                       className="mb-2 block text-xs font-semibold text-neutral-700"
                     >
-                      Your email <span className="text-[#6b162c]">*</span>
+                      Your email{" "}
+                      <span className="text-[#6b162c]">*</span>
                     </label>
 
                     <input
@@ -427,7 +496,8 @@ const outlookUrl =
                     htmlFor="contact-message"
                     className="mb-2 block text-xs font-semibold text-neutral-700"
                   >
-                    Your message <span className="text-[#6b162c]">*</span>
+                    Your message{" "}
+                    <span className="text-[#6b162c]">*</span>
                   </label>
 
                   <textarea
@@ -449,7 +519,7 @@ const outlookUrl =
                   </p>
                 </div>
 
-                {/* GMAIL BUTTON */}
+                {/* MAIN GMAIL BUTTON */}
                 <button
                   type="submit"
                   className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#6b162c] px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#521122] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6b162c]"
@@ -462,60 +532,69 @@ const outlookUrl =
                   />
                 </button>
 
-                {/* OPENING FEEDBACK */}
+                {/* ALTERNATIVE EMAIL PROVIDERS */}
+                <div className="space-y-3">
+                  <p className="text-center text-xs text-neutral-500">
+                    Or choose another email service
+                  </p>
+
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+
+                    {/* OUTLOOK */}
+                    <button
+                      type="button"
+                      onClick={() => openEmail("outlook")}
+                      className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 transition-all hover:border-[#6b162c]/40 hover:bg-[#FAF8F5] hover:text-[#6b162c]"
+                    >
+                      Open in Outlook
+
+                      <ExternalLink size={15} />
+                    </button>
+
+                    {/* DEFAULT EMAIL APP */}
+                    <button
+                      type="button"
+                      onClick={() => openEmail("default")}
+                      className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 transition-all hover:border-[#6b162c]/40 hover:bg-[#FAF8F5] hover:text-[#6b162c]"
+                    >
+                      Other email app
+
+                      <ArrowUpRight size={15} />
+                    </button>
+
+                  </div>
+                </div>
+
+                {/* FEEDBACK */}
                 {feedback && (
                   <div
                     role="status"
                     aria-live="polite"
                     className="rounded-lg bg-[#FAF8F5] px-4 py-3 text-sm text-[#6b162c]"
                   >
-                    {feedback}
+                    <p>{feedback}</p>
 
-                    {gmailFallbackUrl && (
+                    {fallbackUrl && (
                       <a
-                        href={gmailFallbackUrl}
+                        href={fallbackUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="ml-2 inline-flex items-center gap-1 font-semibold underline"
+                        className="mt-2 inline-flex items-center gap-1 font-semibold underline"
                       >
-                        Open Gmail
+                        Open email service
+
                         <ExternalLink size={13} />
                       </a>
                     )}
                   </div>
                 )}
 
-                {/* ALTERNATIVE EMAIL */}
-                <div className="flex flex-col items-center gap-2 text-center">
-                  <p className="text-xs leading-relaxed text-neutral-500">
-                    Gmail opens with the message pre-filled.
-                    You must click Send in Gmail to deliver it.
-                  </p>
+                {/* INFO */}
+                <p className="text-center text-xs leading-relaxed text-neutral-400">
+                  Your email application will prepare the message.
+                  Please review it and click Send to deliver it.
+                </p>
 
-                
-<div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
-  {/* Open Outlook in browser */}
-  <a
-    href={outlookUrl}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#6b162c] hover:underline"
-  >
-    Open in Outlook
-    <ArrowUpRight size={14} />
-  </a>
-
-  {/* Open the user's default email app */}
-  <a
-    href={alternativeEmailUrl}
-    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#6b162c] hover:underline"
-  >
-    Other email app
-    <ArrowUpRight size={14} />
-  </a>
-</div>
-
-                </div>
               </form>
             </div>
           </AnimatedSection>

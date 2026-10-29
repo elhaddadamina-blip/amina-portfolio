@@ -320,7 +320,7 @@ export function Navbar() {
 
           <div className="mt-4 grid grid-cols-2 gap-3 pt-2">
             <a
-              href="/cv.pdf"
+              href="/CV%20AMINA%20EL%20HADDAD.pdf"
               target="_blank"
               rel="noopener noreferrer"
               onClick={closeMenus}

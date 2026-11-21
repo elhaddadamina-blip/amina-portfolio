@@ -15,6 +15,17 @@ const linkedinCertifications =
 
 const certificates = [
   {
+    title: "Oracle Database SQL Certified Associate",
+    issuer: "Oracle",
+    date: "November 2026",
+    expires: null,
+    kind: "Associate certification",
+    skills: ["SQL", "DDL", "DML", "DCL"],
+    featured: true,
+    credentialUrl:
+      "https://catalog-education.oracle.com/pls/certview/sharebadge?id=237343BBCB34150644ADE6611EA8686372B9A3011D5A2B3952AD11B11993426B",
+  },
+  {
     title:
       "Oracle Cloud Infrastructure 2025 Certified Generative AI Professional",
     issuer: "Oracle",
